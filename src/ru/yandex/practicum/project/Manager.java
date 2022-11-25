@@ -23,104 +23,60 @@ public class Manager {
 
             switch (command) {
                 case 1:
-                    System.out.println("Выберите тип задачи: " + "\n" +
-                            "1 - Простая задача, " + "2 - Большая задача");
-                    int commandTwo = scanner.nextInt();
+                    int commandTwo = selectTask();
                     if (commandTwo == 1) {
-
-                        Task task = new Task();
-                        idTask++;
-
-                        String nameTask = "";
-                        String description = "";
-                        System.out.println("Введите название задачи");
-                        while (nameTask.isEmpty()) {
-                            nameTask = scanner.nextLine();
-                            task.setNameTask(nameTask);
-                        }
-
-                        while (description.isEmpty()) {
-                            System.out.println("Опишите задачу");
-                            description = scanner.nextLine();
-                            System.out.println();
-                            task.setDescription(description);
-                        }
-
-                        task.setStatus(status[0]);
-                        task.id = idTask;
-                        taskList.put(idTask, task);
+                        addTask();
 
                     } else if (commandTwo == 2) {
-
-                        idEpic++;
-                        System.out.println("Введите название эпика");
-                        String nameEpic = scanner.nextLine();
-                        while (nameEpic.isEmpty()) {
-                            nameEpic = scanner.nextLine();
-                        }
-
-                        System.out.println("Опишите эпик");
-                        String description = scanner.nextLine();
-                        String statusEpic = status[0];
-                        Epic epic = new Epic(nameEpic, description, idEpic, statusEpic);
-                        idSubtask = 0;
-
-                        while (true) {
-
-                            idSubtask++;
-                            System.out.println("Если подзадачи закончились введите: 0");
-                            System.out.println("Введите название подзадачи эпика: " + nameEpic);
-                            String nameSubtask = scanner.nextLine();
-                            if (Objects.equals(nameSubtask, "0")) {
-                                break;
-                            }
-                            System.out.println("Опишите подзадачу эпика");
-                            String descriptionSubtask = scanner.nextLine();
-                            String statusSubtask = status[0];
-                            Subtask subtask = new Subtask(nameSubtask, descriptionSubtask, idSubtask, statusSubtask);
-                            epic.subtask.put(idSubtask, subtask);
-                        }
-
-                        epicList.put(idEpic, epic);
-
-
+                        addEpic();
                     } else {
                         System.out.println("Такой команды пока нет");
                     }
                     break;
 
                 case 2:
-                    System.out.println("Выберите тип задачи: " + "\n" +
-                            "1 - Простая задача, " + "2 - Большая задача");
-                    int commandTree = scanner.nextInt();
-                    if (commandTree == 1) {
-                        System.out.println("Список простых задач:");
+                    if (!checkTaskAndEpic()) {
+                        break;
+                    }
+                    int commandTree = selectTask();
 
-                        for (int id : taskList.keySet()) {
-                            Task task = taskList.get(id);
-                            System.out.println(id + " " + task.nameTask);
+                    if (commandTree == 1) {
+                        if (!checkTaskSize()) {
+                            break;
                         }
+                        printListTask();
                         System.out.println("Выберите задачу для изменения статуса");
                         int numberTask = scanner.nextInt();
+                        if (!checkTaskNull(numberTask)) {
+                            break;
+                        }
+                        checkTaskId(taskList, numberTask);
                         updateTask(taskList.get(numberTask));
                     }
+
                     if (commandTree == 2) {
-                        int numberDoneSubtask = 0;
-                        System.out.println("Список больших задач:");
-                        for (int id : taskList.keySet()) {
-                            Epic epic = epicList.get(id);
-                            System.out.println(id + " " + epic.nameTask);
+                        if (!checkEpicSize()) {
+                            break;
                         }
+                        int numberDoneSubtask = 0;
+                        printListEpic();
                         System.out.println("Выберите эпик для изменения статуса подзадачи");
                         int numberEpic = scanner.nextInt();
+                        if (!checkEpicNull(numberEpic)) {
+                            break;
+                        }
+
                         for (int id : epicList.get(numberEpic).subtask.keySet()) {
                             Subtask subtask = epicList.get(numberEpic).subtask.get(id);
                             System.out.println(id + " " + subtask.nameTask + " - " + subtask.status);
                         }
+
                         System.out.println("Выберите подзадачу эпика для изменения статуса");
                         int numberSubtask = scanner.nextInt();
+                        if (!checkSubtaskNull(numberEpic, numberSubtask)) {
+                            break;
+                        }
                         updateTask(epicList.get(numberEpic).subtask.get(numberSubtask));
-
                         epicList.get(numberEpic).status = status[1];
 
                         for (int i = 1; i <= epicList.get(numberEpic).subtask.size(); i++) {
@@ -133,56 +89,49 @@ public class Manager {
                             epicList.get(numberEpic).status = status[2];
                         }
                     }
+                    break;
 
-                    break;
                 case 3:
-                    System.out.println(toString());
-                    break;
-                case 4:
-                    if (taskList.size() == 0 && epicList.size() == 0) {
-                        System.out.println("Задач нет");
+                    if (!checkTaskAndEpic()) {
                         break;
                     }
+                    System.out.println(toString());
+                    break;
 
-                    if (taskList.size() == 0) {
-                        System.out.println("Простых задач нет");
+                case 4:
+                    if (!checkTaskAndEpic()) {
+                        break;
                     }
-                    if (epicList.size() == 0) {
-                        System.out.println("Больших задач нет");
-                    }
-
-                    System.out.println("Выберите тип задачи: " + "\n" +
-                            "1 - Простая задача, " + "2 - Большая задача");
-                    int commandFour = scanner.nextInt();
+                    int commandFour = selectTask();
                     if (commandFour == 1) {
-                        System.out.println("Введите id задачи");
-                        int numberTask = scanner.nextInt();
-                        if (taskList.get(numberTask) == null) {
-                            System.out.println("Такой задачи нет или задача удалена");
-                        } else {
-                            System.out.println(taskList.get(numberTask));
+                        if (!checkTaskSize()) {
+                            break;
                         }
+                        int numberTask = enterId();
+                        if (!checkTaskNull(numberTask)) {
+                            break;
+                        }
+                        checkTaskId(taskList, numberTask);
                     }
                     if (commandFour == 2) {
-                        System.out.println("Введите id задачи");
-                        int numberEpic = scanner.nextInt();
-                        if (taskList.get(numberEpic) == null) {
-                            System.out.println("Такой задачи нет или задача удалена");
-                        } else {
-                            System.out.println(epicList.get(numberEpic));
+                        if (!checkEpicSize()) {
+                            break;
                         }
+                        int numberEpic = enterId();
+                        if (!checkEpicNull(numberEpic)) {
+                            break;
+                        }
+                        checkEpicId(epicList, numberEpic);
                     }
                     break;
 
                 case 5:
-                    if (epicList.size() == 0) {
-                        System.out.println("Больших задач нет");
+                    if (!checkEpicSize()) {
                         break;
                     }
-                    System.out.println("Введите id задачи");
-                    int numberEpic = scanner.nextInt();
-                    if (epicList.get(numberEpic) == null) {
-                        System.out.println("Такой задачи нет");
+                    int numberEpic = enterId();
+                    if (!checkEpicNull(numberEpic)) {
+                        break;
                     } else {
                         System.out.println(epicList.get(numberEpic).getNameTask());
                         System.out.println(epicList.get(numberEpic).getSubtask());
@@ -190,33 +139,34 @@ public class Manager {
                     }
 
                 case 6:
-                    System.out.println("Выберите тип задачи: " + "\n" +
-                            "1 - Простая задача, " + "2 - Большая задача");
-                    int commandSix = scanner.nextInt();
-
+                    if (!checkTaskAndEpic()) {
+                        break;
+                    }
+                    int commandSix = selectTask();
                     if (commandSix == 1) {
-                        if (taskList.size() == 0) {
-                            System.out.println("Задач нет");
+                        if (!checkTaskSize()) {
                             break;
                         }
-                        System.out.println("Введите id задачи");
-                        int numberTask = scanner.nextInt();
+                        int numberTask = enterId();
+                        if (!checkTaskNull(numberTask)) {
+                            break;
+                        }
                         taskList.remove(numberTask);
                     }
                     if (commandSix == 2) {
-                        if (epicList.size() == 0) {
-                            System.out.println("Задач нет");
+                        if (!checkEpicSize()) {
                             break;
                         }
-                        System.out.println("Введите id задачи");
-                        int numberEpicRemove = scanner.nextInt();
+                        int numberEpicRemove = enterId();
+                        if (!checkEpicNull(numberEpicRemove)) {
+                            break;
+                        }
                         epicList.remove(numberEpicRemove);
                     }
-
                     break;
+
                 case 7:
-                    if (taskList.size() == 0 || epicList.size() == 0) {
-                        System.out.println("Задач нет");
+                    if (!checkTaskAndEpic()) {
                         break;
                     }
                     taskList.clear();
@@ -224,6 +174,7 @@ public class Manager {
                     idEpic = 0;
                     idTask = 0;
                     break;
+
                 case 0:
                     startMenu = false;
                     break;
@@ -246,11 +197,59 @@ public class Manager {
                 "0 - Завершить программу.");
     }
 
-    @Override
-    public String toString() {
-        return "Manager{" + "\n\t" +
-                "taskList=" + "\n\t" + taskList.entrySet() + "\n\t" +
-                "epicList=" + "\n\t" + epicList + '}' + "\n\t";
+    public void addTask() {
+        Task task = new Task();
+        String nameTask = "";
+        String description = "";
+
+        System.out.println("Введите название задачи");
+        while (nameTask.isEmpty()) {
+            nameTask = scanner.nextLine();
+            task.setNameTask(nameTask);
+        }
+
+        while (description.isEmpty()) {
+            System.out.println("Опишите задачу");
+            description = scanner.nextLine();
+            System.out.println();
+            task.setDescription(description);
+        }
+        idTask++;
+        task.setStatus(status[0]);
+        task.id = idTask;
+        taskList.put(idTask, task);
+    }
+
+    public void addEpic() {
+        System.out.println("Введите название эпика");
+        String nameEpic = scanner.nextLine();
+
+        while (nameEpic.isEmpty()) {
+            nameEpic = scanner.nextLine();
+        }
+
+        System.out.println("Опишите эпик");
+        String description = scanner.nextLine();
+        String statusEpic = status[0];
+        idEpic++;
+        Epic epic = new Epic(nameEpic, description, idEpic, statusEpic);
+        idSubtask = 0;
+
+        while (true) {
+            idSubtask++;
+            System.out.println("Если подзадачи закончились введите: 0");
+            System.out.println("Введите название подзадачи эпика: " + nameEpic);
+            String nameSubtask = scanner.nextLine();
+            if (Objects.equals(nameSubtask, "0")) {
+                break;
+            }
+            System.out.println("Опишите подзадачу эпика");
+            String descriptionSubtask = scanner.nextLine();
+            String statusSubtask = status[0];
+            Subtask subtask = new Subtask(nameSubtask, descriptionSubtask, idSubtask, statusSubtask);
+            epic.subtask.put(idSubtask, subtask);
+        }
+        epicList.put(idEpic, epic);
     }
 
     public void updateTask(Task task) {
@@ -265,11 +264,109 @@ public class Manager {
         }
     }
 
+    public int selectTask() {
+        System.out.println("Выберите тип задачи: " + "\n" +
+                "1 - Простая задача, " + "2 - Большая задача");
+        return scanner.nextInt();
+    }
+
+    public void printListTask() {
+        System.out.println("Список простых задач:");
+        for (int id : taskList.keySet()) {
+            Task task = taskList.get(id);
+            System.out.println(id + " " + task.nameTask);
+        }
+    }
+
+    public void printListEpic() {
+        System.out.println("Список больших задач:");
+        for (int id : epicList.keySet()) {
+            Epic epic = epicList.get(id);
+            System.out.println(id + " " + epic.nameTask);
+        }
+    }
+
+    public int enterId() {
+        System.out.println("Введите id задачи");
+        return scanner.nextInt();
+    }
+
+    public void checkTaskId(HashMap<Integer, Task> taskList, int numberTask) {
+        if (taskList.get(numberTask) == null) {
+            System.out.println("Такой задачи нет или задача удалена");
+        } else {
+            System.out.println(taskList.get(numberTask));
+        }
+    }
+
+    public void checkEpicId(HashMap<Integer, Epic> epicList, int numberTask) {
+        if (epicList.get(numberTask) == null) {
+            System.out.println("Такой задачи нет или задача удалена");
+        } else {
+            System.out.println(epicList.get(numberTask));
+        }
+    }
+
+    public boolean checkTaskAndEpic() {
+        if (taskList.size() == 0 && epicList.size() == 0) {
+            System.out.println("Задач нет");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkTaskSize() {
+        if (taskList.size() == 0) {
+            System.out.println("Задач нет");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkEpicSize() {
+        if (epicList.size() == 0) {
+            System.out.println("Задач нет");
+            return false;
+        }
+        return true;
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Manager manager = (Manager) o;
         return Arrays.equals(status, manager.status);
+    }
+
+    public boolean checkEpicNull(int numberEpic) {
+        if (epicList.get(numberEpic) == null) {
+            System.out.println("Такой задачи нет или задача удалена");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkTaskNull(int numberTask) {
+        if (taskList.get(numberTask) == null) {
+            System.out.println("Такой задачи нет или задача удалена");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkSubtaskNull(int numberEpic, int numberSubtask) {
+        if (epicList.get(numberEpic).subtask.get(numberSubtask) == null) {
+            System.out.println("Такой задачи нет");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Manager{" + "\n\t" +
+                "taskList=" + "\n\t" + taskList.entrySet() + "\n\t" +
+                "epicList=" + "\n\t" + epicList + '}' + "\n\t";
     }
 
     @Override

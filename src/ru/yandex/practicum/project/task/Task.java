@@ -1,18 +1,18 @@
-package ru.yandex.practicum.project;
+package ru.yandex.practicum.project.task;
 
 import java.util.Objects;
 
 public class Task {
 
-    public String nameTask;
-    public String description;
-    public String status;
-    public int id;
+    private String nameTask;
+    private String description;
+    private String status;
+    private int id;
 
     public Task(String nameTask, String description, int id, String status) {
         this.nameTask = nameTask;
         this.description = description;
-        this.status = "NEW";
+        this.status = status;
         this.id += id;
     }
 
@@ -27,6 +27,10 @@ public class Task {
         this.nameTask = nameTask;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -37,6 +41,14 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

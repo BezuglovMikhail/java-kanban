@@ -1,5 +1,4 @@
 package ru.yandex.practicum.project.manager;
-
 import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 
@@ -9,14 +8,24 @@ import static ru.yandex.practicum.project.status.Status.IN_PROGRESS;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Scanner;
 
 public class Manager {
-    public HashMap<Integer, Task> taskList = new HashMap<>();
-    public HashMap<Integer, Epic> epicList = new HashMap<>();
-    public HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    public int id = 0;
-    Scanner scanner = new Scanner(System.in);
+    private HashMap<Integer, Task> taskList = new HashMap<>();
+    private HashMap<Integer, Epic> epicList = new HashMap<>();
+    private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    private int id = 0;
+
+    public HashMap<Integer, Task> getTaskList() {
+        return taskList;
+    }
+
+    public HashMap<Integer, Epic> getEpicList() {
+        return epicList;
+    }
+
+    public HashMap<Integer, Subtask> getSubtaskList() {
+        return subtaskList;
+    }
 
     public Task addTask(Task task) {
         id++;
@@ -36,7 +45,7 @@ public class Manager {
             id++;
             subtask.setId(id);
             subtask.setStatus(String.valueOf(Status.NEW));
-            subtask.setNameEpic(epic.getNameTask());
+            subtask.setIdEpic(epic.getId());
             idSubtaskEpic.add(id);
             subtaskList.put(id, subtask);
         }
@@ -155,13 +164,12 @@ public class Manager {
         if (o == null || getClass() != o.getClass()) return false;
         Manager manager = (Manager) o;
         return id == manager.id && Objects.equals(taskList, manager.taskList)
-                && Objects.equals(epicList, manager.epicList)
-                && Objects.equals(scanner, manager.scanner);
+                && Objects.equals(epicList, manager.epicList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskList, epicList, id, scanner);
+        return Objects.hash(taskList, epicList, id);
     }
 
     @Override
@@ -170,5 +178,4 @@ public class Manager {
                 "taskList=" + "\n\t" + taskList.entrySet() + "\n\t" +
                 "epicList=" + "\n\t" + epicList + '}' + "\n\t";
     }
-
 }

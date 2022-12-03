@@ -1,29 +1,29 @@
 package ru.yandex.practicum.project.task;
 
 public class Subtask extends Task {
-    private String nameEpic;
+    private int idEpic;
 
     public Subtask(String nameTask, String description) {
         super(nameTask, description);
     }
 
-    public Subtask(String nameTask, String description, String status, int id, String nameEpic) {
+    public Subtask(String nameTask, String description, String status, int id, int idEpic) {
         super(nameTask, description, status, id);
-        this.nameEpic = nameEpic;
+        this.idEpic = idEpic;
     }
 
-    public String getNameEpic() {
-        return nameEpic;
+    public int getNameEpic() {
+        return idEpic;
     }
 
-    public void setNameEpic(String nameEpic) {
-        this.nameEpic = nameEpic;
+    public void setIdEpic(int idEpic) {
+        this.idEpic = idEpic;
     }
 
     @Override
     public String toString() {
         return "Subtask{" +
-                "nameEpic='" + nameEpic + '\'' +
+                "idEpic='" + idEpic + '\'' +
                 ", nameTask='" + getNameTask() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +

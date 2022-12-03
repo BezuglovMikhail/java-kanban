@@ -25,29 +25,30 @@ public class Main {
         manager.addEpic(epic1, subtasks1);
         manager.addEpic(epic2, subtasks2);
 
-        System.out.println(manager.taskList + "\n" +
-                manager.epicList + "\n" +
-                manager.subtaskList + "\n");
+        System.out.println(manager.getTaskList() + "\n" +
+                manager.getEpicList() + "\n" +
+                manager.getSubtaskList() + "\n");
 
         manager.updateTask(new Task(task1.getNameTask(), task1.getDescription(), String.valueOf(Status.DONE),
                 task1.getId()));
-        manager.updateEpic((new Epic(epic2.getNameTask(), epic2.getDescription(), String.valueOf(Status.DONE), epic2.getId(),
-                        epic2.getIdSubtaskEpic())),
-                (new ArrayList<>(Collections.singleton(new Subtask(manager.subtaskList.get(6).getNameTask(),
-                        manager.subtaskList.get(6).getDescription(), String.valueOf(Status.IN_PROGRESS),
-                        manager.subtaskList.get(6).getId(), manager.subtaskList.get(6).getNameEpic())))));
+        manager.updateEpic((new Epic(epic2.getNameTask(), epic2.getDescription(), String.valueOf(Status.DONE),
+                        epic2.getId(), epic2.getIdSubtaskEpic())),
+                (new ArrayList<>(Collections.singleton(new Subtask(manager.getSubtaskList().get(6).getNameTask(),
+                        manager.getSubtaskList().get(6).getDescription(), String.valueOf(Status.IN_PROGRESS),
+                        manager.getSubtaskList().get(6).getId(), manager.getSubtaskList().get(6).getNameEpic())))));
 
         manager.findTaskId(1);
         manager.findTaskId(5);
         System.out.println(manager.findSubtaskForEpicId(5));
 
         ArrayList<Subtask> subtasks3 = new ArrayList<>();
-        subtasks3.add(new Subtask(manager.subtaskList.get(3).getNameTask(), manager.subtaskList.get(3).getDescription(),
-                String.valueOf(Status.DONE), manager.subtaskList.get(3).getId(),
-                manager.subtaskList.get(3).getNameEpic()));
-        subtasks3.add(new Subtask(manager.subtaskList.get(4).getNameTask(), manager.subtaskList.get(4).getDescription(),
-                String.valueOf(Status.DONE), manager.subtaskList.get(4).getId(),
-                manager.subtaskList.get(4).getNameEpic()));
+        subtasks3.add(new Subtask(manager.getSubtaskList().get(3).getNameTask(),
+                manager.getSubtaskList().get(3).getDescription(),
+                String.valueOf(Status.DONE), manager.getSubtaskList().get(3).getId(),
+                manager.getSubtaskList().get(3).getNameEpic()));
+        subtasks3.add(new Subtask(manager.getSubtaskList().get(4).getNameTask(),
+                manager.getSubtaskList().get(4).getDescription(), String.valueOf(Status.DONE),
+                manager.getSubtaskList().get(4).getId(), manager.getSubtaskList().get(4).getNameEpic()));
 
         manager.updateEpic((new Epic(epic1.getNameTask(), epic1.getDescription(), epic1.getStatus(), epic1.getId(),
                 epic1.getIdSubtaskEpic())), subtasks3);
@@ -57,15 +58,15 @@ public class Main {
         System.out.println(manager.findSubtaskForEpicId(2));
         manager.findTaskIdAndRemove(3);
 
-        System.out.println(manager.taskList + "\n" +
-                manager.epicList + "\n" +
-                manager.subtaskList + "\n");
+        System.out.println(manager.getTaskList() + "\n" +
+                manager.getEpicList() + "\n" +
+                manager.getSubtaskList() + "\n");
 
         manager.cleanTask();
 
-        System.out.println(manager.taskList + "\n" +
-                manager.epicList + "\n" +
-                manager.subtaskList + "\n");
+        System.out.println(manager.getTaskList() + "\n" +
+                manager.getEpicList() + "\n" +
+                manager.getSubtaskList() + "\n");
     }
 
     @Override

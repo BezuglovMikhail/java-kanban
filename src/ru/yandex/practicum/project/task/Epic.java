@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-
     private ArrayList<Integer> idSubtaskEpic = new ArrayList<>();
 
     public Epic(String nameTask, String description) {
@@ -27,8 +26,8 @@ public class Epic extends Task {
     public String toString() {
         return "Epic{" +
                 "nameEpic='" + getNameTask() + '\'' + ", description='" + getDescription() + '\'' +
-                ", status='" + getStatus() + '\'' + ", id=" + getId() + "\n\t" +
-                "idSubtaskEpic=" + idSubtaskEpic + "\n\t" + "} ";
+                ", status='" + getStatus() + '\'' + ", id='" + getId() + '\'' +
+                ", idSubtaskEpic=" + idSubtaskEpic + "\n\t" + "} ";
     }
 
     @Override

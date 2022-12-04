@@ -1,4 +1,5 @@
-import ru.yandex.practicum.project.manager.Manager;
+import ru.yandex.practicum.project.manager.InMemoryTaskManager;
+import ru.yandex.practicum.project.manager.Managers;
 import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 
@@ -8,7 +9,8 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        Manager manager = new Manager();
+
+        InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
 
         Task task1 = new Task("Прогулка", "Одеться и пойти гулять");
         Epic epic1 = new Epic("Переезд", "Переезд в другой город");
@@ -25,9 +27,7 @@ public class Main {
         manager.addEpic(epic1, subtasks1);
         manager.addEpic(epic2, subtasks2);
 
-        System.out.println(manager.getTaskList() + "\n" +
-                manager.getEpicList() + "\n" +
-                manager.getSubtaskList() + "\n");
+        manager.printAllTask();
 
         manager.updateTask(new Task(task1.getNameTask(), task1.getDescription(), String.valueOf(Status.DONE),
                 task1.getId()));
@@ -40,6 +40,11 @@ public class Main {
         manager.findTaskId(1);
         manager.findTaskId(5);
         System.out.println(manager.findSubtaskForEpicId(5));
+        System.out.println();
+        System.out.println();
+        System.out.println(manager.getHistoryManager().getHistory());
+        System.out.println();
+        System.out.println();
 
         ArrayList<Subtask> subtasks3 = new ArrayList<>();
         subtasks3.add(new Subtask(manager.getSubtaskList().get(3).getNameTask(),
@@ -53,20 +58,22 @@ public class Main {
         manager.updateEpic((new Epic(epic1.getNameTask(), epic1.getDescription(), epic1.getStatus(), epic1.getId(),
                 epic1.getIdSubtaskEpic())), subtasks3);
 
-        manager.findTaskIdAndRemove(4);
-
-        System.out.println(manager.findSubtaskForEpicId(2));
         manager.findTaskIdAndRemove(3);
+        System.out.println(manager.findSubtaskForEpicId(2));
+        System.out.println();
+        System.out.println();
+        System.out.println(manager.getHistoryManager().getHistory());
+        System.out.println();
+        System.out.println();
+        manager.printAllTask();
+        manager.findTaskIdAndRemove(1);
+        manager.findTaskIdAndRemove(4);
+        manager.findTaskIdAndRemove(6);
 
-        System.out.println(manager.getTaskList() + "\n" +
-                manager.getEpicList() + "\n" +
-                manager.getSubtaskList() + "\n");
-
+        manager.printAllTask();
         manager.cleanTask();
-
-        System.out.println(manager.getTaskList() + "\n" +
-                manager.getEpicList() + "\n" +
-                manager.getSubtaskList() + "\n");
+        manager.printAllTask();
+        System.out.println(manager.getHistoryManager().getHistory());
     }
 
     @Override

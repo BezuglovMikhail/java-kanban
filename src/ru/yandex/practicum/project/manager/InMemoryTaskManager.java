@@ -1,19 +1,17 @@
 package ru.yandex.practicum.project.manager;
 import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
-
 import static ru.yandex.practicum.project.status.Status.DONE;
 import static ru.yandex.practicum.project.status.Status.IN_PROGRESS;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-
-public class Manager {
-    private HashMap<Integer, Task> taskList = new HashMap<>();
-    private HashMap<Integer, Epic> epicList = new HashMap<>();
-    private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+public class InMemoryTaskManager implements TaskManager {
+    private final HashMap<Integer, Task> taskList = new HashMap<>();
+    private final HashMap<Integer, Epic> epicList = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     private int id = 0;
+
+    InMemoryHistoryManager historyManager = (InMemoryHistoryManager) Managers.getDefaultHistory();
 
     public HashMap<Integer, Task> getTaskList() {
         return taskList;
@@ -27,6 +25,7 @@ public class Manager {
         return subtaskList;
     }
 
+    @Override
     public Task addTask(Task task) {
         id++;
         task.setStatus(String.valueOf(Status.NEW));
@@ -35,6 +34,7 @@ public class Manager {
         return task;
     }
 
+    @Override
     public Epic addEpic(Epic epic, ArrayList<Subtask> subtasks) {
         id++;
         epic.setId(id);
@@ -54,6 +54,7 @@ public class Manager {
         return epic;
     }
 
+    @Override
     public Task updateTask(Task task) {
         if (Objects.equals(task.getStatus(), String.valueOf(IN_PROGRESS))
                 || Objects.equals(task.getStatus(), String.valueOf(DONE))) {
@@ -63,6 +64,7 @@ public class Manager {
         return task;
     }
 
+    @Override
     public Epic updateEpic(Epic epic, ArrayList<Subtask> subtasks) {
         int numberDoneSubtask = 0;
         int numberInProgressSubtask = 0;
@@ -79,8 +81,8 @@ public class Manager {
 
         if (numberDoneSubtask == subtasks.size()) {
             epic.setStatus(String.valueOf(Status.DONE));
-
             epicList.put(epic.getId(), epic);
+
         } else if (numberInProgressSubtask >= 1) {
             epic.setStatus(String.valueOf(IN_PROGRESS));
             epicList.put(epic.getId(), epic);
@@ -88,18 +90,27 @@ public class Manager {
         return epic;
     }
 
+    @Override
     public void findTaskId(int taskId) {
         if (!(epicList.get(taskId) == null)) {
             System.out.println(epicList.get(taskId));
+            historyManager.add(epicList.get(taskId));
+
         } else if (!(subtaskList.get(taskId) == null)) {
             System.out.println(subtaskList.get(taskId));
+            historyManager.add(subtaskList.get(taskId));
+
         } else if (!(taskList.get(taskId) == null)) {
             System.out.println(taskList.get(taskId));
+            //historyManager.historyList.add(taskId);
+            historyManager.add(taskList.get(taskId));
+
         } else {
             System.out.println("Такой задачи нет или задача удалена");
         }
     }
 
+    @Override
     public void findTaskIdAndRemove(int taskId) {
         if (!(epicList.get(taskId) == null)) {
 
@@ -115,10 +126,7 @@ public class Manager {
 
                 for (int id : epic.getIdSubtaskEpic()) {
                     if (id == taskId) {
-                        int epicId = i;
-                        int subtaskIndex = epicList.get(i).getIdSubtaskEpic().indexOf(taskId);
-
-                        epicList.get(epicId).getIdSubtaskEpic().remove(subtaskIndex);
+                        epicList.get(i).getIdSubtaskEpic().remove((Integer) taskId);
                         subtaskList.remove(taskId);
                         break;
                     }
@@ -131,38 +139,51 @@ public class Manager {
         }
     }
 
+    @Override
     public ArrayList<Subtask> findSubtaskForEpicId(int epicId) {
         ArrayList<Subtask> subtasksEpicId = new ArrayList<>();
-        if (!checkEpicNull(epicId)) {
-        } else {
-            if (epicList.get(epicId).getIdSubtaskEpic().size() == 0) {
-            }
+
             for (int id : epicList.get(epicId).getIdSubtaskEpic()) {
                 subtasksEpicId.add(subtaskList.get(id));
-            }
+                historyManager.add(subtaskList.get(id));
+
         }
         return subtasksEpicId;
     }
 
+    @Override
+    public void printAllTask() {
+        System.out.println(getTaskList());
+        for (int idTask : getTaskList().keySet()) {
+            historyManager.add(getTaskList().get(idTask));
+        }
+        System.out.println(getEpicList());
+        for (int idEpic : getEpicList().keySet()) {
+            historyManager.add(getEpicList().get(idEpic));
+        }
+        System.out.println(getSubtaskList());
+        for (int idSubTask : getSubtaskList().keySet()) {
+            historyManager.add(getSubtaskList().get(idSubTask));
+        }
+    }
+
+    @Override
+    public InMemoryHistoryManager getHistoryManager() {
+        return historyManager;
+    }
+
+    @Override
     public void cleanTask() {
         epicList.clear();
         subtaskList.clear();
         taskList.clear();
     }
 
-    public boolean checkEpicNull(int numberEpic) {
-        if (epicList.get(numberEpic) == null) {
-            System.out.println("Неверный тип задачи или задача удалена");
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Manager manager = (Manager) o;
+        InMemoryTaskManager manager = (InMemoryTaskManager) o;
         return id == manager.id && Objects.equals(taskList, manager.taskList)
                 && Objects.equals(epicList, manager.epicList);
     }

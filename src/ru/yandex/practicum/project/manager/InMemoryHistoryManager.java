@@ -1,26 +1,23 @@
 package ru.yandex.practicum.project.manager;
-
 import ru.yandex.practicum.project.task.*;
-
 import java.util.LinkedList;
-import java.util.List;
 
-public class InMemoryHistoryManager <T extends Task> implements HistoryManager {
+public class InMemoryHistoryManager implements HistoryManager<Task> {
 
-    public List<T> historyTaskList = new LinkedList<>();
+    private final LinkedList<Task> historyTaskList = new LinkedList<>();
 
     @Override
     public void add(Task task) {
         if (historyTaskList.size() < 10) {
-            historyTaskList.add((T) task);
+            historyTaskList.add(task);
         } else if (historyTaskList.size() == 10) {
-            historyTaskList.remove(0);
-            historyTaskList.add((T) task);
+            historyTaskList.removeFirst();
+            historyTaskList.add(task);
         }
     }
 
     @Override
-    public List<T> getHistory() {
+    public LinkedList<Task> getHistory() {
         return historyTaskList;
     }
 

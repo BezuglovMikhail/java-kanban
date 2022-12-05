@@ -42,7 +42,7 @@ public class Main {
         System.out.println(manager.findSubtaskForEpicId(5));
         System.out.println();
         System.out.println();
-        System.out.println(manager.getHistoryManager().getHistory());
+        System.out.println(manager.historyManager.getHistory());
         System.out.println();
         System.out.println();
 
@@ -62,7 +62,7 @@ public class Main {
         System.out.println(manager.findSubtaskForEpicId(2));
         System.out.println();
         System.out.println();
-        System.out.println(manager.getHistoryManager().getHistory());
+        System.out.println(manager.historyManager.getHistory());
         System.out.println();
         System.out.println();
         manager.printAllTask();
@@ -73,7 +73,7 @@ public class Main {
         manager.printAllTask();
         manager.cleanTask();
         manager.printAllTask();
-        System.out.println(manager.getHistoryManager().getHistory());
+        System.out.println(manager.historyManager.getHistory());
     }
 
     @Override

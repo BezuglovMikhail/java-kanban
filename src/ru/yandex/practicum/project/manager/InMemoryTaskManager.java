@@ -3,7 +3,9 @@ import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 import static ru.yandex.practicum.project.status.Status.DONE;
 import static ru.yandex.practicum.project.status.Status.IN_PROGRESS;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> taskList = new HashMap<>();
@@ -11,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     private int id = 0;
 
-    InMemoryHistoryManager historyManager = (InMemoryHistoryManager) Managers.getDefaultHistory();
+    public HistoryManager<Task> historyManager = Managers.getDefaultHistory();
 
     public HashMap<Integer, Task> getTaskList() {
         return taskList;
@@ -73,6 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (subtask.getStatus().equals("DONE")) {
                 numberDoneSubtask += 1;
                 subtaskList.put(subtask.getId(), subtask);
+
             } else if (subtask.getStatus().equals("IN_PROGRESS")) {
                 numberInProgressSubtask += 1;
                 subtaskList.put(subtask.getId(), subtask);
@@ -91,35 +94,32 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void findTaskId(int taskId) {
-        if (!(epicList.get(taskId) == null)) {
-            System.out.println(epicList.get(taskId));
+    public Task findTaskId(int taskId) {
+        if (epicList.containsKey(taskId)) {
             historyManager.add(epicList.get(taskId));
+            return epicList.get(taskId);
 
-        } else if (!(subtaskList.get(taskId) == null)) {
-            System.out.println(subtaskList.get(taskId));
+        } else if (subtaskList.containsKey(taskId)) {
             historyManager.add(subtaskList.get(taskId));
+            return subtaskList.get(taskId);
 
-        } else if (!(taskList.get(taskId) == null)) {
-            System.out.println(taskList.get(taskId));
-            //historyManager.historyList.add(taskId);
+        } else if (taskList.containsKey(taskId)) {
             historyManager.add(taskList.get(taskId));
-
-        } else {
-            System.out.println("Такой задачи нет или задача удалена");
+            return taskList.get(taskId);
         }
+        return null;
     }
 
     @Override
     public void findTaskIdAndRemove(int taskId) {
-        if (!(epicList.get(taskId) == null)) {
+        if (epicList.containsKey(taskId)) {
 
             for (int idSubtask : epicList.get(taskId).getIdSubtaskEpic()) {
                 subtaskList.remove(idSubtask);
             }
             epicList.remove(taskId);
 
-        } else if (!(subtaskList.get(taskId) == null)) {
+        } else if (subtaskList.containsKey(taskId)) {
 
             for (int i : epicList.keySet()) {
                 Epic epic = epicList.get(i);
@@ -132,7 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
                     }
                 }
             }
-        } else if (!(taskList.get(taskId) == null)) {
+        } else if (taskList.containsKey(taskId)) {
             taskList.remove(taskId);
         } else {
             System.out.println("Неверный тип задачи или задача удалена");
@@ -143,9 +143,9 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> findSubtaskForEpicId(int epicId) {
         ArrayList<Subtask> subtasksEpicId = new ArrayList<>();
 
-            for (int id : epicList.get(epicId).getIdSubtaskEpic()) {
-                subtasksEpicId.add(subtaskList.get(id));
-                historyManager.add(subtaskList.get(id));
+        for (int id : epicList.get(epicId).getIdSubtaskEpic()) {
+            subtasksEpicId.add(subtaskList.get(id));
+            historyManager.add(subtaskList.get(id));
 
         }
         return subtasksEpicId;
@@ -165,11 +165,6 @@ public class InMemoryTaskManager implements TaskManager {
         for (int idSubTask : getSubtaskList().keySet()) {
             historyManager.add(getSubtaskList().get(idSubTask));
         }
-    }
-
-    @Override
-    public InMemoryHistoryManager getHistoryManager() {
-        return historyManager;
     }
 
     @Override

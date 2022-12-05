@@ -1,9 +1,7 @@
 package ru.yandex.practicum.project.manager;
-
 import ru.yandex.practicum.project.task.Epic;
 import ru.yandex.practicum.project.task.Subtask;
 import ru.yandex.practicum.project.task.Task;
-
 import java.util.ArrayList;
 
 public interface TaskManager {
@@ -16,7 +14,7 @@ public interface TaskManager {
 
     Epic updateEpic(Epic epic, ArrayList<Subtask> subtasks);
 
-    void findTaskId(int taskId);
+    Task findTaskId(int taskId);
 
     void findTaskIdAndRemove(int taskId);
 
@@ -25,6 +23,4 @@ public interface TaskManager {
     void cleanTask();
 
     void printAllTask();
-    InMemoryHistoryManager getHistoryManager();
-
 }

@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
 
         InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
+        System.out.println(manager.historyManager.getHistory());
 
         Task task1 = new Task("Прогулка", "Одеться и пойти гулять");
         Epic epic1 = new Epic("Переезд", "Переезд в другой город");
@@ -69,10 +70,16 @@ public class Main {
         manager.findTaskIdAndRemove(1);
         manager.findTaskIdAndRemove(4);
         manager.findTaskIdAndRemove(6);
-
+        System.out.println();
+        System.out.println();
+        System.out.println(manager.historyManager.getHistory());
+        System.out.println();
+        System.out.println();
         manager.printAllTask();
         manager.cleanTask();
         manager.printAllTask();
+        System.out.println();
+        System.out.println();
         System.out.println(manager.historyManager.getHistory());
     }
 

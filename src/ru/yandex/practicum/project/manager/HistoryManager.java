@@ -1,11 +1,12 @@
 package ru.yandex.practicum.project.manager;
 import ru.yandex.practicum.project.task.*;
 
-import java.util.List;
+import java.util.LinkedHashSet;
 
 public interface HistoryManager <T extends Task> {
 
     void add(T task);
+    void remove(int id);
 
-    List<Task> getHistory();
+    LinkedHashSet<Task> getHistory();
 }

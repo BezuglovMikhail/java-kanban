@@ -58,9 +58,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task task) {
+
         if (Objects.equals(task.getStatus(), String.valueOf(IN_PROGRESS))
                 || Objects.equals(task.getStatus(), String.valueOf(DONE))) {
             task.setStatus(task.getStatus());
+            historyManager.remove(task.getId());
             taskList.put(task.getId(), task);
         }
         return task;
@@ -89,6 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (numberInProgressSubtask >= 1) {
             epic.setStatus(String.valueOf(IN_PROGRESS));
             epicList.put(epic.getId(), epic);
+
         }
         return epic;
     }
@@ -116,8 +119,10 @@ public class InMemoryTaskManager implements TaskManager {
 
             for (int idSubtask : epicList.get(taskId).getIdSubtaskEpic()) {
                 subtaskList.remove(idSubtask);
+                historyManager.remove(id);
             }
             epicList.remove(taskId);
+            historyManager.remove(id);
 
         } else if (subtaskList.containsKey(taskId)) {
 
@@ -128,12 +133,14 @@ public class InMemoryTaskManager implements TaskManager {
                     if (id == taskId) {
                         epicList.get(i).getIdSubtaskEpic().remove((Integer) taskId);
                         subtaskList.remove(taskId);
+                        historyManager.remove(id);
                         break;
                     }
                 }
             }
         } else if (taskList.containsKey(taskId)) {
             taskList.remove(taskId);
+            historyManager.remove(id);
         } else {
             System.out.println("Неверный тип задачи или задача удалена");
         }
@@ -172,6 +179,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicList.clear();
         subtaskList.clear();
         taskList.clear();
+        historyManager.getHistory().clear();
     }
 
     @Override
@@ -179,7 +187,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InMemoryTaskManager manager = (InMemoryTaskManager) o;
-        return id == manager.id && Objects.equals(taskList, manager.taskList)
+        return id == manager.id
+                && Objects.equals(taskList, manager.taskList)
                 && Objects.equals(epicList, manager.epicList);
     }
 
@@ -190,8 +199,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public String toString() {
-        return "Manager{" + "\n\t" +
-                "taskList=" + "\n\t" + taskList.entrySet() + "\n\t" +
-                "epicList=" + "\n\t" + epicList + '}' + "\n\t";
+        return  "Manager{" +
+                "taskList=" + taskList.entrySet() +
+                "epicList=" + epicList + '}';
     }
 }

@@ -45,7 +45,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "\n\t" + "Task{" +
                 "nameTask='" + nameTask +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
@@ -58,7 +58,8 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(nameTask, task.nameTask)
+        return id == task.id
+                && Objects.equals(nameTask, task.nameTask)
                 && Objects.equals(description, task.description)
                 && Objects.equals(status, task.status);
     }

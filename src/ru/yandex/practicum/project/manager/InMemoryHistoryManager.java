@@ -2,15 +2,13 @@ package ru.yandex.practicum.project.manager;
 import ru.yandex.practicum.project.task.*;
 import ru.yandex.practicum.project.node.Node;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager<Task> {
 
-    private final LinkedList<Task> customLinkedList = new LinkedList<>();
     private Node<Task> head;
     private Node<Task> tail;
-
-    private final LinkedHashSet<Task> historyTaskList = new LinkedHashSet<>();
 
     public HashMap<Integer, Node<Task>> historyTaskMap = new HashMap<>();
 
@@ -21,18 +19,9 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
         if (oldTail == null) {
             head = newNode;
         } else {
-            oldTail.next = newNode;
+            oldTail.setNext(newNode);
         }
-        customLinkedList.addLast(task);
         historyTaskMap.put(task.getId(), newNode);
-    }
-
-    public void getTasks (LinkedList<Task> customLinkedList) {
-        historyTaskList.addAll(customLinkedList);
-    }
-
-    public void removeNode(Node<Task> node) {
-        historyTaskList.remove(node.task);
     }
 
     @Override
@@ -42,19 +31,22 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
 
     @Override
     public void remove(int id) {
-        removeNode(historyTaskMap.get(id));
+        historyTaskMap.remove(id);
     }
 
     @Override
-    public LinkedHashSet<Task> getHistory() {
-        getTasks(customLinkedList);
+    public ArrayList<Task> getHistory() {
+        ArrayList<Task> historyTaskList = new ArrayList<>();
+        for(Node node : historyTaskMap.values()) {
+            historyTaskList.add((Task) node.getTask());
+        }
         return historyTaskList;
     }
 
     @Override
     public String toString() {
         return "InMemoryHistoryManager{" +
-                ", historyTaskList=" + historyTaskList +
+                ", historyTaskMap=" + historyTaskMap +
                 '}';
     }
 }

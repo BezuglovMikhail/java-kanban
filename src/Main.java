@@ -38,14 +38,17 @@ public class Main {
                         manager.getSubtaskList().get(6).getDescription(), String.valueOf(Status.IN_PROGRESS),
                         manager.getSubtaskList().get(6).getId(), manager.getSubtaskList().get(6).getNameEpic())))));
 
-        manager.findTaskId(1);
         manager.findTaskId(5);
+        manager.findTaskId(1);
         System.out.println(manager.findSubtaskForEpicId(5));
         System.out.println();
         System.out.println();
         System.out.println(manager.historyManager.getHistory());
         System.out.println();
         System.out.println();
+
+        Task task2 = new Task("Отдых", "Отключить все гаджеты и лечь спать");
+        manager.addTask(task2);
 
         ArrayList<Subtask> subtasks3 = new ArrayList<>();
         subtasks3.add(new Subtask(manager.getSubtaskList().get(3).getNameTask(),
@@ -70,6 +73,8 @@ public class Main {
         manager.findTaskIdAndRemove(1);
         manager.findTaskIdAndRemove(4);
         manager.findTaskIdAndRemove(6);
+        manager.updateTask(new Task(task2.getNameTask(), task2.getDescription(), String.valueOf(Status.IN_PROGRESS),
+                task2.getId()));
         System.out.println();
         System.out.println();
         System.out.println(manager.historyManager.getHistory());

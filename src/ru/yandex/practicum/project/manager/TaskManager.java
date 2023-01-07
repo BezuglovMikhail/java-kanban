@@ -1,7 +1,9 @@
 package ru.yandex.practicum.project.manager;
+
 import ru.yandex.practicum.project.task.Epic;
 import ru.yandex.practicum.project.task.Subtask;
 import ru.yandex.practicum.project.task.Task;
+
 import java.util.ArrayList;
 
 public interface TaskManager {

@@ -1,4 +1,5 @@
 package ru.yandex.practicum.project.task;
+
 import java.util.Objects;
 
 public class Task {

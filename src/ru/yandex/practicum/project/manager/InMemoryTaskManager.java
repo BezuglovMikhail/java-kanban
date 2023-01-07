@@ -1,8 +1,11 @@
 package ru.yandex.practicum.project.manager;
+
 import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
+
 import static ru.yandex.practicum.project.status.Status.DONE;
 import static ru.yandex.practicum.project.status.Status.IN_PROGRESS;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -58,11 +61,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task task) {
-
-        if (Objects.equals(task.getStatus(), String.valueOf(IN_PROGRESS))
-                || Objects.equals(task.getStatus(), String.valueOf(DONE))) {
+        if (Objects.equals(task.getStatus(),
+                String.valueOf(IN_PROGRESS)) || Objects.equals(task.getStatus(),
+                String.valueOf(DONE))) {
             task.setStatus(task.getStatus());
-            historyManager.remove(task.getId());
             taskList.put(task.getId(), task);
         }
         return task;
@@ -91,7 +93,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (numberInProgressSubtask >= 1) {
             epic.setStatus(String.valueOf(IN_PROGRESS));
             epicList.put(epic.getId(), epic);
-
         }
         return epic;
     }
@@ -199,8 +200,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public String toString() {
-        return  "Manager{" +
-                "taskList=" + taskList.entrySet() +
-                "epicList=" + epicList + '}';
+        return "Manager{" + "taskList=" + taskList.entrySet() + "epicList=" + epicList + '}';
     }
 }

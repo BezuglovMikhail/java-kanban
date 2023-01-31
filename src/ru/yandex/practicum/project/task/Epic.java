@@ -10,6 +10,10 @@ public class Epic extends Task {
         super(nameTask, description);
     }
 
+    public Epic(String nameTask, String description, String status, int id) {
+        super(nameTask, description, status, id);
+    }
+
     public Epic(String nameTask, String description, String status, int id, ArrayList<Integer> idSubtaskEpic) {
         super(nameTask, description, status, id);
         this.idSubtaskEpic = idSubtaskEpic;

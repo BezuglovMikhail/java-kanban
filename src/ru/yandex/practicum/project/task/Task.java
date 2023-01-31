@@ -50,7 +50,7 @@ public class Task {
                 "nameTask='" + nameTask +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
-                ", id=" + id +
+                ", id='" + id + '\'' +
                 '}' + "\n\t";
     }
 

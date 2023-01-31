@@ -12,7 +12,7 @@ public class Subtask extends Task {
         this.idEpic = idEpic;
     }
 
-    public int getNameEpic() {
+    public int getIdEpic() {
         return idEpic;
     }
 
@@ -27,7 +27,7 @@ public class Subtask extends Task {
                 ", nameTask='" + getNameTask() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
-                ", id=" + getId() +
+                ", id='" + getId() + '\'' +
                 "}" + "\n\t";
     }
 }

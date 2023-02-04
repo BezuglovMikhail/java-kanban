@@ -5,8 +5,6 @@ import ru.yandex.practicum.project.task.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class InMemoryHistoryManager implements HistoryManager<Task> {
 
@@ -15,14 +13,9 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
 
     private final HashMap<Integer, Node<Task>> historyTaskMap = new HashMap<>();
 
-    public HashMap<Integer, Node<Task>> getHistoryTaskMap() {
-        return historyTaskMap;
-    }
-    //private ArrayList<Task> historyTaskList = new ArrayList<>();
-
     public void linkLast(Task task) {
         Node<Task> oldTail = tail;
-        Node<Task> newNode = new Node<>(null, task, oldTail);
+        Node<Task> newNode = new Node<>(null, task, null);
         tail = newNode;
         if (oldTail == null) {
             head = newNode;
@@ -30,8 +23,6 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
             oldTail.setNext(newNode);
             head.setPrev(newNode);
         }
-        //newNode.setPrev(oldTail);
-        //newNode.setNext(head);
 
         historyTaskMap.put(task.getId(), newNode);
     }
@@ -49,6 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
         if (nodeDel.getPrev() != null) {
             nodeDel.getPrev().setNext(nodeDel.getNext());
         }
+        historyTaskMap.remove(nodeDel.getTask().getId());
     }
 
     @Override
@@ -60,6 +52,11 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
 
     @Override
     public void add(Task task) {
+        if (historyTaskMap.containsKey(task.getId())) {
+            remove(task.getId());
+            historyTaskMap.remove(task.getId());
+        }
+
         linkLast(task);
     }
 
@@ -71,12 +68,8 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
     @Override
     public ArrayList<Task> getHistory() {
         ArrayList<Task> historyTaskList = new ArrayList<>();
-        if (head != null) {
-            /*for (Node<Task> node : getHistoryTaskMap().values()) {
+        if (head != null || tail != null) {
 
-            //for (Node<Task> node = head; node == tail; node.getNext()) {
-                historyTaskList.add(node.getTask());
-            }*/
             Node<Task> node = head;
             while (node != tail) {
                 historyTaskList.add(node.getTask());

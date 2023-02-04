@@ -1,10 +1,8 @@
 package ru.yandex.practicum.project.manager;
 
-import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 
-import static ru.yandex.practicum.project.status.Status.DONE;
-import static ru.yandex.practicum.project.status.Status.IN_PROGRESS;
+import static ru.yandex.practicum.project.status.Status.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +10,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Integer, Task> taskList = new HashMap<>();
-    private HashMap<Integer, Epic> epicList = new HashMap<>();
-    private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    private final HashMap<Integer, Task> taskList = new HashMap<>();
+    private final HashMap<Integer, Epic> epicList = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     private int id = 0;
 
     public HistoryManager<Task> historyManager = Managers.getDefaultHistory();
@@ -31,22 +29,10 @@ public class InMemoryTaskManager implements TaskManager {
         return subtaskList;
     }
 
-    public void setTaskList(HashMap<Integer, Task> taskList) {
-        this.taskList = taskList;
-    }
-
-    public void setEpicList(HashMap<Integer, Epic> epicList) {
-        this.epicList = epicList;
-    }
-
-    public void setSubtaskList(HashMap<Integer, Subtask> subtaskList) {
-        this.subtaskList = subtaskList;
-    }
-
     @Override
     public Task addTask(Task task) throws IOException {
         id++;
-        task.setStatus(String.valueOf(Status.NEW));
+        task.setStatus(NEW);
         task.setId(id);
         taskList.put(id, task);
         return task;
@@ -56,12 +42,12 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic addEpic(Epic epic, ArrayList<Subtask> subtasks) throws IOException {
         id++;
         epic.setId(id);
-        epic.setStatus(String.valueOf(Status.NEW));
+        epic.setStatus(NEW);
         ArrayList<Integer> idSubtaskEpic = new ArrayList<>();
         for (Subtask subtask : subtasks) {
             id++;
             subtask.setId(id);
-            subtask.setStatus(String.valueOf(Status.NEW));
+            subtask.setStatus((NEW));
             subtask.setIdEpic(epic.getId());
             idSubtaskEpic.add(id);
             subtaskList.put(id, subtask);
@@ -73,9 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task task) throws IOException {
-        if (Objects.equals(task.getStatus(),
-                String.valueOf(IN_PROGRESS)) || Objects.equals(task.getStatus(),
-                String.valueOf(DONE))) {
+        if (Objects.equals(task.getStatus(),IN_PROGRESS) || Objects.equals(task.getStatus(), DONE)) {
             task.setStatus(task.getStatus());
             taskList.put(task.getId(), task);
         }
@@ -87,19 +71,19 @@ public class InMemoryTaskManager implements TaskManager {
         int numberDoneSubtask = 0;
         int numberInProgressSubtask = 0;
         for (Subtask subtask : subtasks) {
-            if (subtask.getStatus().equals("DONE")) {
+            if (subtask.getStatus().equals(DONE)) {
                 numberDoneSubtask += 1;
                 subtaskList.put(subtask.getId(), subtask);
-            } else if (subtask.getStatus().equals("IN_PROGRESS")) {
+            } else if (subtask.getStatus().equals(IN_PROGRESS)) {
                 numberInProgressSubtask += 1;
                 subtaskList.put(subtask.getId(), subtask);
             }
         }
         if (numberDoneSubtask == subtasks.size()) {
-            epic.setStatus(String.valueOf(Status.DONE));
+            epic.setStatus(DONE);
             epicList.put(epic.getId(), epic);
         } else if (numberInProgressSubtask >= 1) {
-            epic.setStatus(String.valueOf(IN_PROGRESS));
+            epic.setStatus(IN_PROGRESS);
             epicList.put(epic.getId(), epic);
         }
         return epic;

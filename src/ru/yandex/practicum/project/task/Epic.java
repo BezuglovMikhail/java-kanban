@@ -1,7 +1,11 @@
 package ru.yandex.practicum.project.task;
 
+import ru.yandex.practicum.project.status.Status;
+
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static ru.yandex.practicum.project.task.NameTask.EPIC;
 
 public class Epic extends Task {
     private ArrayList<Integer> idSubtaskEpic = new ArrayList<>();
@@ -10,13 +14,15 @@ public class Epic extends Task {
         super(nameTask, description);
     }
 
-    public Epic(String nameTask, String description, String status, int id) {
+    public Epic(String nameTask, String description, Status status, int id) {
         super(nameTask, description, status, id);
+        setType(EPIC);
     }
 
-    public Epic(String nameTask, String description, String status, int id, ArrayList<Integer> idSubtaskEpic) {
+    public Epic(String nameTask, String description, Status status, int id, ArrayList<Integer> idSubtaskEpic) {
         super(nameTask, description, status, id);
         this.idSubtaskEpic = idSubtaskEpic;
+        setType(EPIC);
     }
 
     public ArrayList<Integer> getIdSubtaskEpic() {

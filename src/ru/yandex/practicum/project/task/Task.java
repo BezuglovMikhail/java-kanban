@@ -1,23 +1,30 @@
 package ru.yandex.practicum.project.task;
 
+import ru.yandex.practicum.project.status.Status;
+
 import java.util.Objects;
+
+import static ru.yandex.practicum.project.task.NameTask.TASK;
 
 public class Task {
     private final String nameTask;
     private final String description;
-    private String status;
+    private Status status;
     private int id;
+    private NameTask type;
 
     public Task(String nameTask, String description) {
         this.nameTask = nameTask;
         this.description = description;
+        setType(TASK);
     }
 
-    public Task(String nameTask, String description, String status, int id) {
+    public Task(String nameTask, String description, Status status, int id) {
         this.nameTask = nameTask;
         this.description = description;
         this.status = status;
         this.id = id;
+        setType(TASK);
     }
 
     public String getNameTask() {
@@ -28,11 +35,11 @@ public class Task {
         return description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -42,6 +49,10 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setType(NameTask type) {
+        this.type = type;
     }
 
     @Override

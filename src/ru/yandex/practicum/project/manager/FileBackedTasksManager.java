@@ -225,10 +225,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void printAllTask() throws IOException {
-        super.printAllTask();
+        if (getEpicList().size() != 0 || getSubtaskList().size() != 0 || getTaskList().size() != 0) {
+            super.printAllTask();
+            historyToString(historyManager);
+            save();
+        }
+    }
+
+    @Override
+    public void cleanTask() throws IOException {
+        super.cleanTask();
+        try {
+            PrintWriter pw = new PrintWriter(fileName);
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void findTaskIdAndRemove(int taskId) throws IOException {
+        super.findTaskIdAndRemove(taskId);
         historyToString(historyManager);
         save();
     }
+
+
+
 
     public static void main(String[] args) throws IOException, IllegalAccessException {
         FileBackedTasksManager fileBackedTasksManager =
@@ -254,7 +277,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.findTaskId(5);
         //fileBackedTasksManager.findTaskId(3);
         fileBackedTasksManager.findTaskId(2);
-        fileBackedTasksManager.findTaskId(1);
+        //fileBackedTasksManager.findTaskId(1);
+
+        fileBackedTasksManager.findTaskId(3);
+        fileBackedTasksManager.findTaskIdAndRemove(2);
+        //fileBackedTasksManager.findTaskIdAndRemove(1);
+        //fileBackedTasksManager.findTaskIdAndRemove(3);
+        //fileBackedTasksManager.findTaskId(2);
+        //fileBackedTasksManager.findTaskId(4);
 
         fileBackedTasksManager.updateTask(new Task(task1.getNameTask(), task1.getDescription(), DONE,
                 task1.getId()));
@@ -267,12 +297,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                                 fileBackedTasksManager.getSubtaskList().get(6).getId(),
                                 fileBackedTasksManager.getSubtaskList().get(6).getIdEpic()))));
 
-        System.out.println(fileBackedTasksManager.historyManager.getHistory());
+        //System.out.println(fileBackedTasksManager.historyManager.getHistory());
         //System.out.println(fileBackedTasksManager.historyToStringList);
-        //fileBackedTasksManager.printAllTask();
-        //fileBackedTasksManager.findTaskId(3);
-        //fileBackedTasksManager.findTaskId(1);
-        //fileBackedTasksManager.findTaskId(4);
+        /*fileBackedTasksManager.printAllTask();
+        fileBackedTasksManager.findTaskId(5);
+        fileBackedTasksManager.findTaskId(3);
+        fileBackedTasksManager.findTaskId(2);
+        fileBackedTasksManager.findTaskId(1);
+        fileBackedTasksManager.findTaskIdAndRemove(4);
+        fileBackedTasksManager.findTaskId(4);
+        fileBackedTasksManager.findTaskId(3);
+        fileBackedTasksManager.findTaskId(1);
+        fileBackedTasksManager.findTaskId(2);
+        fileBackedTasksManager.findTaskId(4);
+        //fileBackedTasksManager.cleanTask();
         //fileBackedTasksManager.printAllTask();
         //System.out.println(fileBackedTasksManager.historyToStringList);*/
     }

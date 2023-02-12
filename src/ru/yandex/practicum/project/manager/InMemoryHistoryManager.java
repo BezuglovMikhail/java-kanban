@@ -1,6 +1,7 @@
 package ru.yandex.practicum.project.manager;
 
 import ru.yandex.practicum.project.node.Node;
+import ru.yandex.practicum.project.task.Epic;
 import ru.yandex.practicum.project.task.Task;
 
 import java.util.ArrayList;
@@ -14,8 +15,9 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
     private final HashMap<Integer, Node<Task>> historyTaskMap = new HashMap<>();
 
     public void linkLast(Task task) {
+
+        Node<Task> newNode = new Node<>(tail, task, head);
         Node<Task> oldTail = tail;
-        Node<Task> newNode = new Node<>(null, task, null);
         tail = newNode;
         if (oldTail == null) {
             head = newNode;
@@ -25,6 +27,21 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
         }
 
         historyTaskMap.put(task.getId(), newNode);
+
+       /* Node<Task> oldTail = tail;
+        Node<Task> newNode = new Node<>(null, task, null);
+        tail = newNode;
+        if (oldTail == null) {
+            head = newNode;
+        } else {
+            oldTail.setNext(newNode);
+            head.setPrev(newNode);
+        }
+
+        historyTaskMap.put(task.getId(), newNode);*/
+
+
+
     }
 
     public void removeNode(Node<Task> nodeDel) {
@@ -33,6 +50,9 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
         }
         if (head == nodeDel) {
             head = nodeDel.getNext();
+        }
+        if (tail == nodeDel) {
+            tail = nodeDel.getPrev();
         }
         if (nodeDel.getNext() != null) {
             nodeDel.getNext().setPrev(nodeDel.getPrev());
@@ -52,10 +72,16 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
 
     @Override
     public void add(Task task) {
-        if (historyTaskMap.containsKey(task.getId())) {
+        int taskId = task.getId();
+        if (historyTaskMap.containsKey(taskId)) {
+            remove(taskId);
+            historyTaskMap.remove(taskId);
+        }
+       /* if (historyTaskMap.containsKey((Epic)task.getId())) {
             remove(task.getId());
             historyTaskMap.remove(task.getId());
-        }
+        }*/
+
 
         linkLast(task);
     }
@@ -76,6 +102,7 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
                 node = node.getNext();
             }
             historyTaskList.add(tail.getTask());
+            //System.out.println(historyTaskList);
         }
             return historyTaskList;
     }

@@ -57,7 +57,7 @@ public class Main {
         ArrayList<Subtask> subtasks3 = new ArrayList<>();
         subtasks3.add(new Subtask(manager.getSubtaskList().get(3).getNameTask(),
                 manager.getSubtaskList().get(3).getDescription(),
-                DONE, manager.getSubtaskList().get(3).getId(),
+                NEW, manager.getSubtaskList().get(3).getId(),
                 manager.getSubtaskList().get(3).getIdEpic()));
         subtasks3.add(new Subtask(manager.getSubtaskList().get(4).getNameTask(),
                 manager.getSubtaskList().get(4).getDescription(), DONE,
@@ -65,31 +65,37 @@ public class Main {
 
         manager.updateEpic((new Epic(epic1.getNameTask(), epic1.getDescription(), epic1.getStatus(), epic1.getId(),
                 epic1.getIdSubtaskEpic())), subtasks3);
-
+        //manager.printAllTask();
         //manager.findTaskIdAndRemove(3);
         System.out.println(manager.findSubtaskForEpicId(2));
-        System.out.println();
+        System.out.println(manager.findTaskId(2));
         System.out.println();
         System.out.println(manager.historyManager.getHistory());
+        manager.historyManager.getHistory();
         System.out.println();
         System.out.println();
-        //manager.printAllTask();
+        manager.printAllTask();
+        //System.out.println(manager.historyManager.getHistory());
         manager.findTaskIdAndRemove(1);
+       // System.out.println(manager.historyManager.getHistory());
         manager.findTaskIdAndRemove(4);
-        //manager.findTaskIdAndRemove(6);
+        // System.out.println(manager.historyManager.getHistory());
+        manager.findTaskIdAndRemove(6);
+        System.out.println(manager.historyManager.getHistory());
         manager.updateTask(new Task(task2.getNameTask(), task2.getDescription(), IN_PROGRESS,
                 task2.getId()));
         System.out.println();
         System.out.println();
+        //manager.historyManager.getHistory();
         System.out.println(manager.historyManager.getHistory());
         System.out.println();
         System.out.println();
         manager.printAllTask();
         manager.cleanTask();
-        //manager.printAllTask();
+        manager.printAllTask();
         System.out.println();
         System.out.println();
-        System.out.println(manager.historyManager.getHistory());
+        manager.historyManager.getHistory();
     }
 
     @Override

@@ -4,6 +4,7 @@ import ru.yandex.practicum.project.task.Epic;
 import ru.yandex.practicum.project.task.Subtask;
 import ru.yandex.practicum.project.task.Task;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,11 +20,11 @@ public interface TaskManager {
 
     Task findTaskId(int taskId) throws IOException;
 
-    void findTaskIdAndRemove(int taskId);
+    void findTaskIdAndRemove(int taskId) throws IOException;
 
     ArrayList<Subtask> findSubtaskForEpicId(int epicId) throws IOException;
 
-    void cleanTask();
+    void cleanTask() throws IOException;
 
     void printAllTask() throws IOException;
 }

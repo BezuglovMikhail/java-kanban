@@ -7,6 +7,8 @@ import java.util.Objects;
 
 import static ru.yandex.practicum.project.task.NameTask.EPIC;
 
+
+
 public class Epic extends Task {
     private ArrayList<Integer> idSubtaskEpic = new ArrayList<>();
 

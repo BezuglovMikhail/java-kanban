@@ -19,9 +19,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private final String fileName;
 
-    private FileBackedTasksManager(String fileName) {
+
+    FileBackedTasksManager(String fileName) {
         this.fileName = fileName;
     }
+
+
+   // public FileBackedTasksManager(File file) {
+    //    super();
+   // }
 
     public void save() throws IOException {
         try (BufferedWriter bw = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.TRUNCATE_EXISTING)) {
@@ -280,14 +286,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         //fileBackedTasksManager.findTaskId(1);
 
         fileBackedTasksManager.findTaskId(3);
-        fileBackedTasksManager.findTaskIdAndRemove(2);
+        fileBackedTasksManager.findTaskIdAndRemove(1);
         //fileBackedTasksManager.findTaskIdAndRemove(1);
         //fileBackedTasksManager.findTaskIdAndRemove(3);
         //fileBackedTasksManager.findTaskId(2);
         //fileBackedTasksManager.findTaskId(4);
 
-        fileBackedTasksManager.updateTask(new Task(task1.getNameTask(), task1.getDescription(), DONE,
-                task1.getId()));
+        //fileBackedTasksManager.updateTask(new Task(task1.getNameTask(), task1.getDescription(), DONE,
+                //task1.getId()));
 
         fileBackedTasksManager.updateEpic((new Epic(epic2.getNameTask(), epic2.getDescription(), DONE,
                         epic2.getId(), epic2.getIdSubtaskEpic())),

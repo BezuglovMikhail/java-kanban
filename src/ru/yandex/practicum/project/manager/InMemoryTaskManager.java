@@ -134,10 +134,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (epicList.containsKey(taskId)) {
             for (int idSubtask : epicList.get(taskId).getIdSubtaskEpic()) {
                 subtaskList.remove(idSubtask);
-                historyManager.remove(id);
+                historyManager.remove(idSubtask);
             }
             epicList.remove(taskId);
-            historyManager.remove(id);
+            historyManager.remove(taskId);
         } else if (subtaskList.containsKey(taskId)) {
             for (int i : epicList.keySet()) {
                 Epic epic = epicList.get(i);
@@ -145,14 +145,14 @@ public class InMemoryTaskManager implements TaskManager {
                     if (id == taskId) {
                         epicList.get(i).getIdSubtaskEpic().remove((Integer) taskId);
                         subtaskList.remove(taskId);
-                        historyManager.remove(id);
+                        historyManager.remove(taskId);
                         break;
                     }
                 }
             }
         } else if (taskList.containsKey(taskId)) {
             taskList.remove(taskId);
-            historyManager.remove(id);
+            historyManager.remove(taskId);
         } else {
             System.out.println("Неверный id задачи или задача удалена");
         }

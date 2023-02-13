@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     void create() {
-        task_StatusNewTest = new Task("Простая задача для теста", "Описание простой задачи для теста");
-        task_StatusInProgressTest = new Task("Простая задача для теста", "Описание простой задачи для теста", Status.IN_PROGRESS, 1);
+        task_StatusNewTest = new Task("Простая задача для теста",
+                "Описание простой задачи для теста");
+        task_StatusInProgressTest = new Task("Простая задача для теста",
+                "Описание простой задачи для теста", Status.IN_PROGRESS, 1);
         epic1_StatusNewTest = new Epic("Эпик с одной подзадачей для теста",
                 "Описание эпика с одной подзадачей для теста");
         epic1_StatusInProgressTest = new Epic("Эпик с одной подзадачей для теста",
@@ -67,41 +70,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @BeforeEach
-    abstract void createTasks();
-
-    @Test
-    void addTask() {
-    }
-
-    @Test
-    void addEpic() {
-    }
-
-    @Test
-    void updateTask() throws IOException {
-    }
-
-    @Test
-    void updateEpic() throws IOException {
-    }
-
-    @Test
-    void findTaskId() throws IOException {
-    }
-
-    @Test
-    void findTaskIdAndRemove() {
-    }
-
-    @Test
-    void findSubtaskForEpicId() {
-    }
+    abstract void createTasks() throws IOException;
 
     @Test
     void cleanTask() throws IOException {
-    }
-
-    @Test
-    void printAllTask() {
     }
 }

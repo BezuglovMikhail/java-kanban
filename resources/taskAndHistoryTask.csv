@@ -1,6 +1,0 @@
-id,type,name,status,description,epic
-1,TASK,Прогулка,DONE,Одеться и пойти гулять
-5,EPIC,Прогулка с детьми,IN_PROGRESS,Собрать детей взять снегокат и пойти гулять
-6,SUBTASK,Одеть детей,IN_PROGRESS,Поймать и одеть детей,5
-
-5,2,3,

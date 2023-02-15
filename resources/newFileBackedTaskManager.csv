@@ -1,5 +1,2 @@
-id,type,name,status,description,epic
-4,EPIC,Эпик с двумя подзадачами для теста,NEW,Описание эпика с двумя подзадачами для теста
-5,SUBTASK,Имя первой подзадачи epic2 для теста,NEW,Описание первой подзадачи epic2 для теста,4
-
-5,
+id,type,name,status,description,startTime,duration,epic
+1,TASK,Простая задача для теста,NEW,Описание простой задачи для теста,2023-02-13T19:30,15

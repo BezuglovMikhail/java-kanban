@@ -2,6 +2,8 @@ package ru.yandex.practicum.project.task;
 
 import ru.yandex.practicum.project.status.Status;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static ru.yandex.practicum.project.task.NameTask.TASK;
@@ -12,10 +14,20 @@ public class Task {
     private Status status;
     private int id;
     private NameTask type;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String nameTask, String description) {
         this.nameTask = nameTask;
         this.description = description;
+        setType(TASK);
+    }
+
+    public Task(String nameTask, String description, LocalDateTime startTime, Duration duration) {
+        this.nameTask = nameTask;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
         setType(TASK);
     }
 
@@ -25,6 +37,25 @@ public class Task {
         this.status = status;
         this.id = id;
         setType(TASK);
+    }
+
+    public Task(String nameTask, String description, Status status, int id, LocalDateTime startTime) {
+        this.nameTask = nameTask;
+        this.description = description;
+        this.status = status;
+        this.id = id;
+        setType(TASK);
+        this.startTime = startTime;
+    }
+
+    public Task(String nameTask, String description, Status status, int id, LocalDateTime startTime, Duration duration) {
+        this.nameTask = nameTask;
+        this.description = description;
+        this.status = status;
+        this.id = id;
+        setType(TASK);
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getNameTask() {
@@ -47,12 +78,32 @@ public class Task {
         return id;
     }
 
+    public NameTask getType() {
+        return type;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
     public void setType(NameTask type) {
         this.type = type;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     @Override
@@ -62,6 +113,9 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", id='" + id + '\'' +
+                ", type'" + type + '\'' +
+                ", startTime'" + startTime + '\'' +
+                ", duration'" + duration +
                 '}' + "\n\t";
     }
 

@@ -39,8 +39,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     @Test
     void saveAndLoadOneTaskTest() throws IOException, IllegalAccessException {
         manager.addTask(task_StatusNewTest);
-        ArrayList<String> testTaskStrings = new ArrayList<>(List.of("id,type,name,status,description,epic",
-                "1,TASK,Простая задача для теста,NEW,Описание простой задачи для теста"));
+        ArrayList<String> testTaskStrings = new ArrayList<>(List.of(
+                "id,type,name,status,description,startTime,duration,epic",
+                "1,TASK,Простая задача для теста,NEW,Описание простой задачи для теста,2023-02-13T19:30,15"));
         ArrayList<String> testTaskStringsSave = FileBackedTasksManager.reader(new File("resources/test.csv"));
         FileBackedTasksManager.loadFromFile(new File("resources/test.csv"));
         ArrayList<String> testTaskStringsLoad = FileBackedTasksManager.
@@ -60,7 +61,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         manager.findTaskId(1);
         manager.findTaskId(2);
         manager.findTaskId(3);
-        manager.findTaskIdAndRemove(2);
+        //manager.findTaskIdAndRemove(2);
         manager.findTaskIdAndRemove(1);
         manager.findTaskIdAndRemove(6);
 

@@ -5,12 +5,11 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.time.Month.FEBRUARY;
 
 abstract class TaskManagerTest<T extends TaskManager> {
 
@@ -34,39 +33,55 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected Subtask subtaskEpic2_1_StatusDoneTest;
     protected Subtask subtaskEpic2_2_StatusNewTest;
     protected Subtask subtaskEpic2_2_StatusDoneTest;
+    protected Subtask subtaskEpic2_3_StatusNewTest;
 
 
     @BeforeEach
     void create() {
         task_StatusNewTest = new Task("Простая задача для теста",
-                "Описание простой задачи для теста");
+                "Описание простой задачи для теста",
+                LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
         task_StatusInProgressTest = new Task("Простая задача для теста",
-                "Описание простой задачи для теста", Status.IN_PROGRESS, 1);
+                "Описание простой задачи для теста", Status.IN_PROGRESS, 1,
+                LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
         epic1_StatusNewTest = new Epic("Эпик с одной подзадачей для теста",
                 "Описание эпика с одной подзадачей для теста");
         epic1_StatusInProgressTest = new Epic("Эпик с одной подзадачей для теста",
-                "Описание эпика с одной подзадачей для теста", Status.IN_PROGRESS, 1);
+                "Описание эпика с одной подзадачей для теста", Status.IN_PROGRESS, 1,
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 15), Duration.ofMinutes(15));
         subtaskEpic1_StatusNewTest = new Subtask("Имя подзадачи epic1 для теста",
-                "Описание подзадачи epic1 для теста");
+                "Описание подзадачи epic1 для теста",
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 0), Duration.ofMinutes(15));
         subtaskEpic1_StatusInProgressTest = new Subtask("Имя подзадачи epic1 для теста",
-                "Описание подзадачи epic1 для теста", Status.IN_PROGRESS, 2, 1);
+                "Описание подзадачи epic1 для теста", Status.IN_PROGRESS, 2,
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 0), Duration.ofMinutes(15), 1);
 
         epic2_StatusNewTest = new Epic("Эпик с двумя подзадачами для теста",
                 "Описание эпика с двумя подзадачами для теста");
         epic2_StatusInProgressTest = new Epic("Эпик с двумя подзадачами для теста",
-                "Описание эпика с двумя подзадачами для теста", Status.IN_PROGRESS, 1);
+                "Описание эпика с двумя подзадачами для теста", Status.IN_PROGRESS, 1,
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 45), Duration.ofMinutes(15));
         epic2_StatusDoneTest = new Epic("Эпик с двумя подзадачами для теста",
-                "Описание эпика с двумя подзадачами для теста", Status.DONE, 1);
+                "Описание эпика с двумя подзадачами для теста", Status.DONE, 1,
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 45), Duration.ofMinutes(15));
         subtaskEpic2_1_StatusNewTest = new Subtask("Имя первой подзадачи epic2 для теста",
-                "Описание первой подзадачи epic2 для теста");
+                "Описание первой подзадачи epic2 для теста",
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 45), Duration.ofMinutes(15));
         subtaskEpic2_1_StatusInProgressTest = new Subtask("Имя первой подзадачи epic2 для теста",
-                "Описание первой подзадачи epic2 для теста", Status.IN_PROGRESS, 2, 1);
+                "Описание первой подзадачи epic2 для теста", Status.IN_PROGRESS, 2,
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 45), Duration.ofMinutes(15), 1);
         subtaskEpic2_1_StatusDoneTest = new Subtask("Имя первой подзадачи epic2 для теста",
-                "Описание первой подзадачи epic2 для теста", Status.DONE, 2, 1);
+                "Описание первой подзадачи epic2 для теста", Status.DONE, 2,
+                LocalDateTime.of(2023, FEBRUARY, 13, 20, 45), Duration.ofMinutes(15),  1);
         subtaskEpic2_2_StatusNewTest = new Subtask("Имя второй подзадачи epic2 для теста",
-                "Описание второй подзадачи epic2 для теста");
+                "Описание второй подзадачи epic2 для теста",
+                LocalDateTime.of(2023, FEBRUARY, 13, 22, 30), Duration.ofMinutes(15));
         subtaskEpic2_2_StatusDoneTest = new Subtask("Имя второй подзадачи epic2 для теста",
-                "Описание второй подзадачи epic2 для теста", Status.DONE, 3, 1);
+                "Описание второй подзадачи epic2 для теста", Status.DONE, 3,
+                LocalDateTime.of(2023, FEBRUARY, 13, 22, 30), Duration.ofMinutes(15), 1);
+        subtaskEpic2_3_StatusNewTest = new Subtask("Имя третьей подзадачи epic2 для теста",
+                "Описание третьей подзадачи epic2 для теста",
+                LocalDateTime.of(2023, FEBRUARY, 13, 22, 30), Duration.ofMinutes(15));
     }
 
     @BeforeEach

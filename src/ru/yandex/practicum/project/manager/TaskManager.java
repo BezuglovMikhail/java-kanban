@@ -7,6 +7,8 @@ import ru.yandex.practicum.project.task.Task;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -19,6 +21,10 @@ public interface TaskManager {
     Epic updateEpic(Epic epic, ArrayList<Subtask> subtasks) throws IOException;
 
     Task findTaskId(int taskId) throws IOException;
+
+    TreeSet<Task> getPrioritizedTasks();
+
+    boolean checkCrossTask(Task task, TreeSet<Task> prioritizedTasks);
 
     void findTaskIdAndRemove(int taskId) throws IOException;
 

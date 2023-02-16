@@ -12,12 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-
     @Override
     @BeforeEach
     void createTasks() {
         super.create();
-        manager = new InMemoryTaskManager();
     }
 
     @Test

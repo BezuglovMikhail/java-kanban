@@ -1,12 +1,10 @@
 import ru.yandex.practicum.project.manager.InMemoryTaskManager;
 import ru.yandex.practicum.project.manager.Managers;
-import ru.yandex.practicum.project.status.Status;
 import ru.yandex.practicum.project.task.*;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.ArrayList;
 
 import static java.time.Month.FEBRUARY;

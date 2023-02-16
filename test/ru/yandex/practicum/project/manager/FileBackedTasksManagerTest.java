@@ -19,19 +19,18 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     void createTasks() throws IOException {
         super.create();
         String fileNameTest = "resources/test.csv";
-        String fileNameLoadTest = "resources/newFileBackedTaskManager.csv";
+        String fileNameLoadTest = "resources/testLoad.csv";
         new FileOutputStream(fileNameTest, false).close();
         new FileOutputStream(fileNameLoadTest, false).close();
 
         manager = new FileBackedTasksManager(fileNameTest);
     }
 
-
     @Test
     void loadFromFileReadeEmptyFileTest() throws IOException, IllegalAccessException {
         FileBackedTasksManager.loadFromFile(new File("resources/test.csv"));
         ArrayList<String> testTaskStringsLoad = FileBackedTasksManager.
-                reader(new File("resources/newFileBackedTaskManager.csv"));
+                reader(new File("resources/testLoad.csv"));
 
         assertTrue(testTaskStringsLoad.isEmpty(), "Файл не пустой");
     }
@@ -61,7 +60,6 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         manager.findTaskId(1);
         manager.findTaskId(2);
         manager.findTaskId(3);
-        //manager.findTaskIdAndRemove(2);
         manager.findTaskIdAndRemove(1);
         manager.findTaskIdAndRemove(6);
 

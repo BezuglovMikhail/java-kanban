@@ -113,6 +113,10 @@ public class Task {
         return endTime;
     }
 
+    public void setEndTime(LocalDateTime startTime, Duration duration) {
+        this.endTime = startTime.plus(duration);
+    }
+
     @Override
     public String toString() {
         return "\n\t" + "Task{" +

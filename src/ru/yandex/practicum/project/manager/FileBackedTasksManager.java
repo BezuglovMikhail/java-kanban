@@ -22,7 +22,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private final String fileName;
 
-    FileBackedTasksManager(String fileName) {
+    public FileBackedTasksManager() {
+        fileName = null;
+    }
+
+    public FileBackedTasksManager(String fileName) {
         this.fileName = fileName;
     }
 
@@ -100,8 +104,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return historyTask;
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) throws IllegalAccessException, IOException {
+    public static FileBackedTasksManager loadFileBacked(String fileName) throws IllegalAccessException, IOException, InterruptedException {
         FileBackedTasksManager fileBackedTasksManager = null;
+        File file = new File(fileName);
         if (file.length() != 0) {
             ArrayList<String> fileBacked = reader(file);
             String fileBackedHistory = "";
@@ -222,7 +227,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.findTaskId(taskId);
         historyToString(historyManager);
         save();
-        return null;
+        return getTaskList().get(taskId);
     }
 
     @Override
@@ -245,12 +250,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public void cleanTask() throws IOException {
         super.cleanTask();
-        try {
-            PrintWriter pw = new PrintWriter(fileName);
-            pw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -260,10 +259,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    public static void main(String[] args) throws IOException, IllegalAccessException {
+    public static void main(String[] args) throws IOException, IllegalAccessException, InterruptedException {
         FileBackedTasksManager fileBackedTasksManager =
                 new FileBackedTasksManager("resources/taskAndHistoryTask.csv");
-        loadFromFile(new File("resources/taskAndHistoryTask.csv"));
+        loadFileBacked("resources/taskAndHistoryTask.csv");
 
         Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
                 LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));

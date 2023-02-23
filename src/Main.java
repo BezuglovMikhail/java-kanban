@@ -1,20 +1,29 @@
-import ru.yandex.practicum.project.manager.InMemoryTaskManager;
-import ru.yandex.practicum.project.manager.Managers;
-import ru.yandex.practicum.project.task.*;
+import ru.yandex.practicum.project.server.KVServer;
+import ru.yandex.practicum.project.server.HttpTaskServer;
+import ru.yandex.practicum.project.server.KVTaskClient;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static java.time.Month.FEBRUARY;
-import static ru.yandex.practicum.project.status.Status.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        //FileBackedTasksManager manager = new FileBackedTasksManager("resources/taskAndHistoryTask.csv");
+        //Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
+           //     LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
+       // manager.addTask(task1);
 
-        InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
+       KVServer kvServer = new KVServer();
+       kvServer.start();
+        new HttpTaskServer();
+        //new KVTaskClient("http://localhost:8078/register");
+
+
+            /*
+        {"nameTask": "Имя обычной задачи для теста сервера", "description": "Описание обычной задачи для теста сервера"}
+
+             */
+
+        /*InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
         System.out.println(manager.historyManager.getHistory());
 
         Task task1 = new Task("Прогулка", "Одеться и пойти гулять",

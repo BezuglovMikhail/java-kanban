@@ -3,6 +3,7 @@ package ru.yandex.practicum.project.manager;
 import ru.yandex.practicum.project.task.*;
 
 import static ru.yandex.practicum.project.status.Status.*;
+import static ru.yandex.practicum.project.task.NameTask.TASK;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -44,6 +45,8 @@ public class InMemoryTaskManager implements TaskManager {
             task.setId(id);
             task.setStartTime(task.getStartTime());
             task.setDuration(task.getDuration());
+            task.setType(TASK);
+            task.setEndTime(task.getStartTime(), task.getDuration());
             prioritizedTasks.add(task);
             taskList.put(id, task);
             return task;
@@ -131,7 +134,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task task) throws IOException {
-            prioritizedTasks.remove(taskList.get(task.getId()));
+        prioritizedTasks.remove(taskList.get(task.getId()));
         if (checkCrossTask(task, getPrioritizedTasks())) {  // проверка на пересечение задач при обновлении
             if (Objects.equals(task.getStatus(), IN_PROGRESS) || Objects.equals(task.getStatus(), DONE)) {
                 task.setStatus(task.getStatus());
@@ -140,8 +143,8 @@ public class InMemoryTaskManager implements TaskManager {
             }
             return task;
         } else {
-        throw new IllegalArgumentException("Подзадачи пересекаются по времени!");
-    }
+            throw new IllegalArgumentException("Подзадачи пересекаются по времени!");
+        }
     }
 
     @Override
@@ -160,19 +163,19 @@ public class InMemoryTaskManager implements TaskManager {
         for (Subtask subtask : subtasks) {
             prioritizedTasks.remove(subtaskList.get(subtask.getId()));
             if (checkCrossTask(subtask, getPrioritizedTasks())) {  // проверка на пересечение задач при обновлении
-            if (subtask.getStatus().equals(DONE)) {
-                numberDoneSubtask += 1;
-                prioritizedTasks.add(subtask);
-                subtaskList.put(subtask.getId(), subtask);
-            } else if (subtask.getStatus().equals(IN_PROGRESS)) {
-                numberInProgressSubtask += 1;
-                prioritizedTasks.add(subtask);
-                subtaskList.put(subtask.getId(), subtask);
-            } else if (subtask.getStatus().equals(NEW)) {
-                numberNewSubtask += 1;
-                prioritizedTasks.add(subtask);
-                subtaskList.put(subtask.getId(), subtask);
-            }
+                if (subtask.getStatus().equals(DONE)) {
+                    numberDoneSubtask += 1;
+                    prioritizedTasks.add(subtask);
+                    subtaskList.put(subtask.getId(), subtask);
+                } else if (subtask.getStatus().equals(IN_PROGRESS)) {
+                    numberInProgressSubtask += 1;
+                    prioritizedTasks.add(subtask);
+                    subtaskList.put(subtask.getId(), subtask);
+                } else if (subtask.getStatus().equals(NEW)) {
+                    numberNewSubtask += 1;
+                    prioritizedTasks.add(subtask);
+                    subtaskList.put(subtask.getId(), subtask);
+                }
             } else {
                 throw new IllegalArgumentException("Подзадачи пересекаются по времени!");
             }
@@ -215,12 +218,14 @@ public class InMemoryTaskManager implements TaskManager {
         if (prioritizedTasks.isEmpty()) {
             return true;
         }
+        if (newTask.getEndTime() == null) {
+            newTask.setEndTime(newTask.getStartTime(), newTask.getDuration());
+        }
         for (Task task : prioritizedTasks) {
             if (newTask.getStartTime().isBefore(task.getStartTime())
                     || newTask.getEndTime().isBefore(task.getStartTime())
                     || newTask.getEndTime().isBefore(task.getEndTime())
                     || newTask.getStartTime().isBefore(task.getEndTime())) {
-
                 if (newTask.getStartTime().isAfter(task.getStartTime())
                         || newTask.getEndTime().isAfter(task.getStartTime())
                         || newTask.getEndTime().isAfter(task.getEndTime())

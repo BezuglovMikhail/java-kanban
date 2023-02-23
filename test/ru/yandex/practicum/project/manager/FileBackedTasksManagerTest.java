@@ -27,8 +27,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     }
 
     @Test
-    void loadFromFileReadeEmptyFileTest() throws IOException, IllegalAccessException {
-        FileBackedTasksManager.loadFromFile(new File("resources/test.csv"));
+    void loadFromFileReadeEmptyFileTest() throws IOException, IllegalAccessException, InterruptedException {
+        FileBackedTasksManager.loadFileBacked("resources/test.csv");
         ArrayList<String> testTaskStringsLoad = FileBackedTasksManager.
                 reader(new File("resources/testLoad.csv"));
 
@@ -36,22 +36,22 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     }
 
     @Test
-    void saveAndLoadOneTaskTest() throws IOException, IllegalAccessException {
+    void saveAndLoadOneTaskTest() throws IOException, IllegalAccessException, InterruptedException {
         manager.addTask(task_StatusNewTest);
         ArrayList<String> testTaskStrings = new ArrayList<>(List.of(
                 "id,type,name,status,description,startTime,duration,epic",
                 "1,TASK,Простая задача для теста,NEW,Описание простой задачи для теста,2023-02-13T19:30,15"));
         ArrayList<String> testTaskStringsSave = FileBackedTasksManager.reader(new File("resources/test.csv"));
-        FileBackedTasksManager.loadFromFile(new File("resources/test.csv"));
+        FileBackedTasksManager.loadFileBacked("resources/testLoad.csv");
         ArrayList<String> testTaskStringsLoad = FileBackedTasksManager.
-                reader(new File("resources/newFileBackedTaskManager.csv"));
+                reader(new File("resources/test.csv"));
 
         assertEquals(testTaskStrings, testTaskStringsSave);
         assertEquals(testTaskStringsSave, testTaskStringsLoad);
     }
 
     @Test
-    void saveAndLoadOneTaskTwoEpicWithHistoryManagerTest() throws IOException, IllegalAccessException {
+    void saveAndLoadOneTaskTwoEpicWithHistoryManagerTest() throws IOException, IllegalAccessException, InterruptedException {
         manager.addTask(task_StatusNewTest);
         manager.addEpic(epic1_StatusNewTest, new ArrayList<Subtask>(List.of(subtaskEpic1_StatusInProgressTest)));
         manager.addEpic(epic2_StatusNewTest, new ArrayList<Subtask>(List.of(subtaskEpic2_1_StatusNewTest,
@@ -64,7 +64,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         manager.findTaskIdAndRemove(6);
 
         ArrayList<String> testTaskStringsSave = FileBackedTasksManager.reader(new File("resources/test.csv"));
-        FileBackedTasksManager.loadFromFile(new File("resources/test.csv"));
+        FileBackedTasksManager.loadFileBacked("resources/test.csv");
         ArrayList<String> testTaskStringsLoad = FileBackedTasksManager.
                 reader(new File("resources/newFileBackedTaskManager.csv"));
 

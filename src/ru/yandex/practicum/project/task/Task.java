@@ -1,5 +1,6 @@
 package ru.yandex.practicum.project.task;
 
+import jdk.jshell.Snippet;
 import ru.yandex.practicum.project.status.Status;
 
 import java.time.Duration;
@@ -21,7 +22,6 @@ public class Task {
     public Task(String nameTask, String description) {
         this.nameTask = nameTask;
         this.description = description;
-        setType(TASK);
     }
 
     public Task(String nameTask, String description, LocalDateTime startTime, Duration duration) {
@@ -29,8 +29,16 @@ public class Task {
         this.description = description;
         this.startTime = startTime;
         this.duration = duration;
-        setType(TASK);
         this.endTime = startTime.plus(duration);
+    }
+
+    public Task(String nameTask, String description, LocalDateTime startTime, Duration duration, NameTask type) {
+        this.nameTask = nameTask;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.endTime = startTime.plus(duration);
+        this.type = type;
     }
 
     public Task(String nameTask, String description, Status status, int id) {
@@ -38,7 +46,6 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = id;
-        setType(TASK);
     }
 
     public Task(String nameTask, String description, Status status, int id, LocalDateTime startTime) {
@@ -46,7 +53,6 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = id;
-        setType(TASK);
         this.startTime = startTime;
     }
 
@@ -55,10 +61,20 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = id;
-        setType(TASK);
         this.duration = duration;
         this.startTime = startTime;
         this.endTime = startTime.plus(duration);
+    }
+
+    public Task(String nameTask, String description, Status status, int id, LocalDateTime startTime, Duration duration, LocalDateTime endTime, NameTask type) {
+        this.nameTask = nameTask;
+        this.description = description;
+        this.status = status;
+        this.id = id;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.type = type;
     }
 
     public String getNameTask() {

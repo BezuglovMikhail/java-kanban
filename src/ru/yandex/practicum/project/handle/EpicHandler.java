@@ -34,13 +34,6 @@ public class EpicHandler implements HttpHandler {
             gsonBuilder.serializeNulls();
             gsonBuilder.setPrettyPrinting();
             gson = gsonBuilder.create();
-        /*Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
-                LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
-        httpTaskManager.addTask(task1);
-
-        Task task2 = new Task("Прогулка1", "Одеться и пойти гулять2",
-                LocalDateTime.of(2023, FEBRUARY, 13, 23, 30), Duration.ofMinutes(15));
-        httpTaskManager.addTask(task2);*/
         }
 
         @Override
@@ -52,19 +45,25 @@ public class EpicHandler implements HttpHandler {
                 case "POST": {
                     try {
                         InputStream inputStream = exchange.getRequestBody();
+
                         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                        Epic epic = gson.fromJson(body, Epic.class);
+                        JsonElement jsonElement = JsonParser.parseString(body);
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        Epic epic = gson.fromJson(jsonObject.get("epic").getAsJsonObject(), Epic.class);
+
                         Type listOfSubtaskObject = new TypeToken<ArrayList<Subtask>>() {}.getType();
-                        ArrayList<String> subtasks = gson.fromJson(body, listOfSubtaskObject);
+
+                        ArrayList<Subtask> subtasks = gson.fromJson(jsonObject.get("subtasks").getAsJsonArray(), listOfSubtaskObject);
+
                         if (epic.getNameTask().isEmpty() || epic.getDescription().isEmpty()) {
                             exchange.sendResponseHeaders(400, 0);
                             outputStream.write(("Нельзя добавить задачу без имени и описания.").getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         } else {
                             if (httpTaskManager.getEpicList().containsKey(epic.getId())) {
-                                httpTaskManager.updateTask(epic);
+                                httpTaskManager.updateEpic(epic,subtasks);
                             } else {
-                                httpTaskManager.addTask(epic);
+                                httpTaskManager.addEpic(epic,subtasks);
                             }
                             exchange.sendResponseHeaders(201, 0);
                             outputStream.write(("Задача успешно добавлена.").getBytes(StandardCharsets.UTF_8));
@@ -115,7 +114,8 @@ public class EpicHandler implements HttpHandler {
                         if (epicId.isPresent()) {
                             int id = epicId.get();
                             if (httpTaskManager.getEpicList().containsKey(id)) {
-                                String taskJson = gson.toJson(httpTaskManager.findTaskId(id));
+                                Epic epicFound = (Epic) httpTaskManager.findTaskId(id);
+                                String taskJson = gson.toJson(epicFound);
                                 exchange.sendResponseHeaders(200, 0);
                                 outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
                                 exchange.close();
@@ -130,7 +130,7 @@ public class EpicHandler implements HttpHandler {
                             exchange.close();
                         }
                     } else {
-                        String taskJson = gson.toJson(httpTaskManager.getTaskList());
+                        String taskJson = gson.toJson(httpTaskManager.getEpicList());
                         exchange.sendResponseHeaders(200, 0);
                         outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
                         exchange.close();
@@ -143,3 +143,29 @@ public class EpicHandler implements HttpHandler {
             }
         }
 }
+
+/*
+	{
+	"epic": {
+	"nameTask": "Прогулка24",
+	"description": "Одеться и пойти гулять24"
+	},
+
+"subtasks": [
+	{
+	"nameTask": "Прогулка2",
+	"description": "Одеться и пойти гулять2",
+	"duration": 15,
+	"startTime": "16-02-2023/13:30"
+	},
+	{
+	"nameTask": "Прогулка2",
+	"description": "Одеться и пойти гулять2",
+	"duration": 15,
+	"startTime": "16-02-2023/14:30"
+		}
+ ]
+}
+
+
+ */

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
-    //private static final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd-MM-yyyy/HH:mm");
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy/HH:mm");
 
     @Override

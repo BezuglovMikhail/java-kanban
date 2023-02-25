@@ -23,6 +23,15 @@ public class Epic extends Task {
         setType(EPIC);
     }
 
+    public Epic(String nameTask, String description, LocalDateTime startTime, Duration duration) {
+        super(nameTask, description);
+        setStartTime(startTime);
+        setDuration(duration);
+        setEndTime(startTime, duration);
+        setType(EPIC);
+
+    }
+
     public Epic(String nameTask, String description, Status status, int id, ArrayList<Integer> idSubtaskEpic,
                 LocalDateTime startTime, Duration duration) {
         super(nameTask, description, status, id);
@@ -30,7 +39,12 @@ public class Epic extends Task {
         setStartTime(startTime);
         setDuration(duration);
         setType(EPIC);
+    }
 
+    public Epic(String nameTask, String description, Status status, int id, ArrayList<Integer> idSubtaskEpic,
+                LocalDateTime startTime, Duration duration, LocalDateTime endTime, NameTask type) {
+        super(nameTask, description, status, id, startTime, duration, endTime, type);
+        this.idSubtaskEpic = idSubtaskEpic;
     }
 
     public ArrayList<Integer> getIdSubtaskEpic() {

@@ -40,7 +40,8 @@ abstract class TaskManagerTest<T extends TaskManager> { //тест на пере
     protected Subtask subtaskEpic2_2_StatusDoneTest;
     protected Subtask subtaskEpic2_3_StatusNewTest;
 
-    InMemoryTaskManager manager = (InMemoryTaskManager) getDefault();
+    //InMemoryTaskManager manager = (InMemoryTaskManager) getDefault();
+    InMemoryTaskManager manager = new InMemoryTaskManager();
 
     @BeforeEach
     void create() {
@@ -95,7 +96,7 @@ abstract class TaskManagerTest<T extends TaskManager> { //тест на пере
     }
 
     @BeforeEach
-    abstract void createTasks() throws IOException;
+    abstract void createTasks() throws IOException, InterruptedException;
 
     @Test
     void createTask() throws IOException {

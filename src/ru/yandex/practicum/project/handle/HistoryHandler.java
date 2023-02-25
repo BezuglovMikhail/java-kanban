@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class HistoryHandler implements HttpHandler {
     private final HttpTaskManager httpTaskManager;
@@ -42,6 +41,7 @@ public class HistoryHandler implements HttpHandler {
                 exchange.close();
             } else {
                 String taskJson = gson.toJson(httpTaskManager.historyManager.getHistory());
+                System.out.println(httpTaskManager.historyManager.getHistory());
                 exchange.sendResponseHeaders(200, 0);
                 outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
                 exchange.close();

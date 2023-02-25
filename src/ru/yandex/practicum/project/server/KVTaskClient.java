@@ -1,10 +1,7 @@
 package ru.yandex.practicum.project.server;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -12,10 +9,6 @@ import java.net.http.HttpResponse;
 public class KVTaskClient {
     private final HttpClient kvServerClient = HttpClient.newHttpClient();
     private final String API_TOKEN;
-    //private final URI uri;
-    //private Gson gson;
-    //public KVTaskClient(URL url) {
-      //  this.url = url;
 
     public KVTaskClient(String url) throws IOException, InterruptedException {
             URI uri = URI.create(url);
@@ -33,20 +26,11 @@ public class KVTaskClient {
 
     public void put (String key, String json) {
         URI tasksUri = URI.create("http://localhost:8078/save/" + key + "?API_TOKEN=" + API_TOKEN);
-        //URI epicUri = URI.create("http://localhost:8078/save/epics?API_TOKEN=" + API_TOKEN);
-       // URI subtasksUri = URI.create("http://localhost:8078/save/subtasks?API_TOKEN=" + API_TOKEN);
-
-        // и для истории
-        //InputStream inputStream = h.getRequestBody();
-        //String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        //Task task = gson.fromJson(body, Task.class);
 
         HttpRequest request = HttpRequest.newBuilder()
-        //.POST(HttpRequest.BodyPublishers.ofString("{}"))
-        .POST(HttpRequest.BodyPublishers.ofString(json)) // тело запроса - все задачи в формате json: "[{"id":1}, {"id":2}]"
+        .POST(HttpRequest.BodyPublishers.ofString(json))
         .uri(tasksUri)
         .build();
-        // + запросы для эпиков, подзадач и истории
 
        try {
          getKvServerClient().send(request, HttpResponse.BodyHandlers.ofString());
@@ -56,10 +40,7 @@ public class KVTaskClient {
     }
 
     public String load (String key) {
-        //URI uri = URI.create("http://localhost:8078/save/" + key + "?API_TOKEN=" + API_TOKEN);
-        URI tasksUri = URI.create("http://localhost:8078/load/tasks?API_TOKEN=" + API_TOKEN);
-        URI epicUri = URI.create("http://localhost:8078/load/epics?API_TOKEN=" + API_TOKEN);
-        URI subtasksUri = URI.create("http://localhost:8078/load/subtasks?API_TOKEN=" + API_TOKEN);
+        URI tasksUri = URI.create("http://localhost:8078/load/" + key + "?API_TOKEN=" + API_TOKEN);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -68,19 +49,10 @@ public class KVTaskClient {
                 .build();
         try {
             HttpResponse<String> response = getKvServerClient().send(request, HttpResponse.BodyHandlers.ofString());
-            //HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-
             return response.body();
         } catch (IOException | InterruptedException e) {
             System.out.println("Не могу получить данные от kvserver");
         }
-
-        // делаем запросы к kvserver, получаем от него задачи в формате json и складываем их в хэш мапы
-        //return null;
-
-
-
-
         return key;
     }
 

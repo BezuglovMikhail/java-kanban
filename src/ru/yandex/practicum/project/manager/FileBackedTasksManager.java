@@ -205,37 +205,37 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public Epic addEpic(Epic epic, ArrayList<Subtask> subtasks) throws IOException {
         super.addEpic(epic, subtasks);
         save();
-        return epic;
+        return getEpicList().get(epic.getId());
     }
 
     @Override
     public Task updateTask(Task task) throws IOException {
         super.updateTask(task);
         save();
-        return task;
+        return getTaskList().get(task.getId());
     }
 
     @Override
     public Epic updateEpic(Epic epic, ArrayList<Subtask> subtasks) throws IOException {
         super.updateEpic(epic, subtasks);
         save();
-        return epic;
+        return getEpicList().get(epic.getId());
     }
 
     @Override
     public Task findTaskId(int taskId) throws IOException {
-        super.findTaskId(taskId);
+        Task taskFound = super.findTaskId(taskId);
         historyToString(historyManager);
         save();
-        return getTaskList().get(taskId);
+        return taskFound;
     }
 
     @Override
     public ArrayList<Subtask> findSubtaskForEpicId(int epicId) throws IOException {
-        super.findSubtaskForEpicId(epicId);
+        ArrayList<Subtask> subtasksForEpicId = super.findSubtaskForEpicId(epicId);
         historyToString(historyManager);
         save();
-        return null;
+        return subtasksForEpicId;
     }
 
     @Override

@@ -3,6 +3,7 @@ package ru.yandex.practicum.project.manager;
 import ru.yandex.practicum.project.task.*;
 
 import static ru.yandex.practicum.project.status.Status.*;
+import static ru.yandex.practicum.project.task.NameTask.EPIC;
 import static ru.yandex.practicum.project.task.NameTask.TASK;
 
 import java.io.IOException;
@@ -68,6 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
             id++;
             epic.setId(id);
             epic.setStatus(NEW);
+            epic.setType(EPIC);
             ArrayList<Integer> idSubtaskEpic = new ArrayList<>();
 
             for (Subtask subtask : subtasks) {
@@ -91,6 +93,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setIdSubtaskEpic(idSubtaskEpic);
             epic.setStartTime(calculationStartTimeEpic(idSubtaskEpic));
             epic.setDuration(calculationDuration(idSubtaskEpic, epic.getStartTime()));
+            epic.setEndTime(epic.getStartTime(), epic.getDuration());
             epicList.put(epic.getId(), epic);
             return epic;
         } else {
@@ -195,17 +198,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task findTaskId(int taskId) throws IOException {
+        Task taskFound = null;
         if (epicList.containsKey(taskId)) {
             historyManager.add(epicList.get(taskId));
-            return epicList.get(taskId);
+            taskFound = epicList.get(taskId);
         } else if (subtaskList.containsKey(taskId)) {
             historyManager.add(subtaskList.get(taskId));
-            return subtaskList.get(taskId);
+            taskFound = subtaskList.get(taskId);
         } else if (taskList.containsKey(taskId)) {
             historyManager.add(taskList.get(taskId));
-            return taskList.get(taskId);
+            taskFound = taskList.get(taskId);
         }
-        return null;
+        return taskFound;
     }
 
     @Override
@@ -281,7 +285,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Эпика с таким id нет");
         }
-        return null;
+        return subtasksEpicId;
     }
 
     @Override

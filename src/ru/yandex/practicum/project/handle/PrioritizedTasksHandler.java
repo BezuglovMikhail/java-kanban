@@ -41,6 +41,7 @@ public class PrioritizedTasksHandler implements HttpHandler {
                 exchange.close();
             } else {
                 String taskJson = gson.toJson(httpTaskManager.getPrioritizedTasks());
+                System.out.println(httpTaskManager.getPrioritizedTasks());
                 exchange.sendResponseHeaders(200, 0);
                 outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
                 exchange.close();

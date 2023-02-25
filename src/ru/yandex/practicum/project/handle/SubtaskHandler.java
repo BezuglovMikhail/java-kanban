@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.project.adapters.DurationAdapter;
 import ru.yandex.practicum.project.manager.FileBackedTasksManager;
 import ru.yandex.practicum.project.manager.HttpTaskManager;
+import ru.yandex.practicum.project.task.Subtask;
 import ru.yandex.practicum.project.task.Task;
 import ru.yandex.practicum.project.adapters.LocalDateTimeTypeAdapter;
 
@@ -46,33 +47,6 @@ public class SubtaskHandler implements HttpHandler {
         OutputStream outputStream = exchange.getResponseBody();
 
         switch (requestMethod) {
-            /*case "POST": {
-                try {
-                    InputStream inputStream = exchange.getRequestBody();
-                    String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Task task = gson.fromJson(body, Task.class);
-                    if (task.getNameTask().isEmpty() || task.getDescription().isEmpty()) {
-                        exchange.sendResponseHeaders(400, 0);
-                        outputStream.write(("Нельзя добавить задачу без имени и описания.").getBytes(StandardCharsets.UTF_8));
-                        exchange.close();
-                    } else {
-                        if (httpTaskManager.getTaskList().containsKey(task.getId())) {
-                            httpTaskManager.updateTask(task);
-                        } else {
-                            httpTaskManager.addTask(task);
-                        }
-                        exchange.sendResponseHeaders(201, 0);
-                        outputStream.write(("Задача успешно добавлена.").getBytes(StandardCharsets.UTF_8));
-                        exchange.close();
-                        break;
-                    }
-                } catch (JsonSyntaxException exception) {
-                    exchange.sendResponseHeaders(400, 0);
-                    outputStream.write(("Получен некорректный JSON.").getBytes(StandardCharsets.UTF_8));
-                    exchange.close();
-                    break;
-                }
-            }*/
             case "DELETE": {
                 if (exchange.getRequestURI().getQuery() != null) {
                     String[] pathParts = exchange.getRequestURI().getQuery().split("=");
@@ -110,7 +84,8 @@ public class SubtaskHandler implements HttpHandler {
                     if (taskId.isPresent()) {
                         int id = taskId.get();
                         if (httpTaskManager.getSubtaskList().containsKey(id)) {
-                            String taskJson = gson.toJson(httpTaskManager.findTaskId(id));
+                            Subtask subtaskFound = (Subtask) httpTaskManager.findTaskId(id);
+                            String taskJson = gson.toJson(subtaskFound);
                             exchange.sendResponseHeaders(200, 0);
                             outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
                             exchange.close();
@@ -125,7 +100,12 @@ public class SubtaskHandler implements HttpHandler {
                         outputStream.write(("Значение id не может быть пустым").getBytes(StandardCharsets.UTF_8));
                         exchange.close();
                     }
-                }
+                } else {
+                        String taskJson = gson.toJson(httpTaskManager.getSubtaskList());
+                        exchange.sendResponseHeaders(200, 0);
+                        outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
+                        exchange.close();
+                    }
                 break;
             }
             default:

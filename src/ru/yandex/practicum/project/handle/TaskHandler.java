@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.project.adapters.DurationAdapter;
-import ru.yandex.practicum.project.manager.FileBackedTasksManager;
 import ru.yandex.practicum.project.manager.HttpTaskManager;
 import ru.yandex.practicum.project.task.Task;
 import ru.yandex.practicum.project.adapters.LocalDateTimeTypeAdapter;
@@ -30,14 +29,6 @@ public class TaskHandler implements HttpHandler {
         gsonBuilder.serializeNulls();
         gsonBuilder.setPrettyPrinting();
         gson = gsonBuilder.create();
-
-        /*Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
-                LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
-        httpTaskManager.addTask(task1);
-
-        Task task2 = new Task("Прогулка1", "Одеться и пойти гулять2",
-                LocalDateTime.of(2023, FEBRUARY, 13, 23, 30), Duration.ofMinutes(15));
-        httpTaskManager.addTask(task2);*/
     }
 
     @Override
@@ -83,15 +74,23 @@ public class TaskHandler implements HttpHandler {
                         taskId = Optional.empty();
                     }
                     if (taskId.isPresent()) {
-                        httpTaskManager.findTaskIdAndRemove(taskId.get());
-                        exchange.sendResponseHeaders(200, 0);
-                        outputStream.write(("Задача с id = " + taskId.get() + " удалена").getBytes(StandardCharsets.UTF_8));
-                        exchange.close();
+                       int id = taskId.get();
+                        if (httpTaskManager.getTaskList().containsKey(id)) {
+                            httpTaskManager.findTaskIdAndRemove(id);
+                            exchange.sendResponseHeaders(200, 0);
+                            outputStream.write(("Задача с id = " + id + " удалена").getBytes(StandardCharsets.UTF_8));
+                            exchange.close();
+                        }
+                        else {
+                            exchange.sendResponseHeaders(405, 0);
+                            outputStream.write(("Задачи с id = " + id + " несуществует.").getBytes(StandardCharsets.UTF_8));
+                            exchange.close();
+                        }
                     } else {
-                    exchange.sendResponseHeaders(405, 0);
-                    outputStream.write(("Значение id не может быть пустым").getBytes(StandardCharsets.UTF_8));
-                    exchange.close();
-                }
+                        exchange.sendResponseHeaders(405, 0);
+                        outputStream.write(("Значение id не может быть пустым").getBytes(StandardCharsets.UTF_8));
+                        exchange.close();
+                    }
                 } else {
                     httpTaskManager.cleanTask();
                     exchange.sendResponseHeaders(200, 0);
@@ -112,10 +111,11 @@ public class TaskHandler implements HttpHandler {
                     if (taskId.isPresent()) {
                         int id = taskId.get();
                         if (httpTaskManager.getTaskList().containsKey(id)) {
-                        String taskJson = gson.toJson(httpTaskManager.findTaskId(id));
-                        exchange.sendResponseHeaders(200, 0);
-                        outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
-                        exchange.close();
+                            Task taskFound = httpTaskManager.findTaskId(id);
+                            String taskJson = gson.toJson(taskFound);
+                            exchange.sendResponseHeaders(200, 0);
+                            outputStream.write(taskJson.getBytes(StandardCharsets.UTF_8));
+                            exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
                             outputStream.write(("Задачи с id = " + id + " несуществует.").getBytes(StandardCharsets.UTF_8));

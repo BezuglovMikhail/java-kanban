@@ -7,23 +7,20 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        //FileBackedTasksManager manager = new FileBackedTasksManager("resources/taskAndHistoryTask.csv");
-        //Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
-           //     LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
-       // manager.addTask(task1);
 
        KVServer kvServer = new KVServer();
        kvServer.start();
         new HttpTaskServer();
-        //new KVTaskClient("http://localhost:8078/register");
+         /*new KVTaskClient("http://localhost:8078/register");
 
+  //FileBackedTasksManager manager = new FileBackedTasksManager("resources/taskAndHistoryTask.csv");
+        //Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
+           //     LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
+       // manager.addTask(task1);
 
-            /*
         {"nameTask": "Имя обычной задачи для теста сервера", "description": "Описание обычной задачи для теста сервера"}
 
-             */
-
-        /*InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
+       InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
         System.out.println(manager.historyManager.getHistory());
 
         Task task1 = new Task("Прогулка", "Одеться и пойти гулять",

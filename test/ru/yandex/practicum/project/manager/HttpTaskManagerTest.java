@@ -2,7 +2,7 @@ package ru.yandex.practicum.project.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.*;
@@ -593,24 +593,26 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         URI url = URI.create("http://localhost:8080/tasks/epic/");
 
-        Epic epic2 = new Epic("Эпик для теста", "Описание эпика для теста",
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 15, 30), Duration.ofMinutes(75));
+        Epic epic2 = new Epic("Эпик для теста добавления и обновления эпика", "Описание эпика для теста",
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(41));
 
-        Subtask subtask21 = new Subtask("Составить список", "Список вещей для переезда",
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 15, 30), Duration.ofMinutes(15));
-        Subtask subtask22 = (new Subtask("Упаковать вещи",
-                "Компактно упаковать вещи в коробки и промаркировать",
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 16, 30), Duration.ofMinutes(15)));
+        Subtask subtask21 = new Subtask("Написать тест", "Тест для проверки добавления и изменения задач",
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(15));
+        Subtask subtask22 = (new Subtask("Проверить работу тестов",
+                "Проверить работу добавления и изменения эпика",
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 30), Duration.ofMinutes(15)));
 
         ArrayList<Subtask> subtasks = new ArrayList<>(List.of(subtask21, subtask22));
 
-
-
-        String epic = gson.toJson(epic2);
-        String subtask = gson.toJson(subtasks);
+        JsonObject epicWithSubtaskJsonObject = new JsonObject();
+        JsonObject epicJsonObject = gson.toJsonTree(epic2).getAsJsonObject();
+        epicWithSubtaskJsonObject.add("epic", epicJsonObject);
+        JsonArray jsonArray = gson.toJsonTree(subtasks).getAsJsonArray();
+        epicWithSubtaskJsonObject.add("subtasks", jsonArray);
+        String epicWithSubtask = gson.toJson(epicWithSubtaskJsonObject);
 
         HttpRequest requestPost = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(epic + subtask))
+                .POST(HttpRequest.BodyPublishers.ofString(epicWithSubtask))
                 .uri(url)
                 .build();
 
@@ -622,12 +624,12 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         HttpClient client = HttpClient.newHttpClient();
 
-        Task taskForGetTest = new Task("Проверка тестов", "Проверить, что тесты тестируют функционал",
-                Status.NEW, 6,
-                LocalDateTime.of(2023, FEBRUARY, 13, 5, 30), Duration.ofMinutes(15),
-                LocalDateTime.of(2023, FEBRUARY, 13, 5, 45), NameTask.TASK);
+        Epic epicAfterAdd = new Epic("Эпик для теста добавления и обновления эпика", "Описание эпика для теста", Status.NEW, 6,
+                new ArrayList<>(List.of(7, 8)),
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4),
+                Duration.ofMinutes(41), LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 45), NameTask.EPIC);
 
-        String taskForGetJsonTest = gson.toJson(taskForGetTest);
+        String taskForGetJsonTest = gson.toJson(epicAfterAdd);
 
         try {
             HttpResponse<String> responsePost = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
@@ -642,56 +644,94 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     }
 
     @Test
-    void postTasksEpicUpdateEpicTest() throws IOException, InterruptedException {
+    void postTasksEpicUpdateEpicInProgressTest() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/");
-/* Артем, я не смог сообразить как написать тест для метода addEpic и updateEpic, я не знаю как правильно создать запрос....
-Я проверил работы программы через инсомнию и через мейн всё работает.
-Я использовал поля epic и subtask для проверки винсомнии, как добавить поля при создании теста я пока не понял.
-пример запроса для инсомнии, помоги понять как написать недостающие тесты.
-{
-	"epic": {
-	"idSubtaskEpic": [
-		7,
-		8
-	],
-	"nameTask": "Прогулка24",
-	"description": "Одеться и пойти гулять24",
-	"status": "NEW",
-	"id": 6,
-	"type": "EPIC",
-	"duration": 75,
-	"startTime": "16-02-2023/13:30",
-	"endTime": "16-02-2023/14:45"
-	},
 
-"subtasks": [
-	{
-	"idEpic": 6,
-		"nameTask": "Прогулка2",
-		"description": "Одеться и пойти гулять2",
-		"status": "DONE",
-		"id": 7,
-		"type": "SUBTASK",
-		"duration": 15,
-		"startTime": "16-02-2023/13:30",
-		"endTime": "16-02-2023/13:45"
-	},
-	{
-		"idEpic": 6,
-		"nameTask": "Прогулка2",
-		"description": "Одеться и пойти гулять2",
-		"status": "DONE",
-		"id": 8,
-		"type": "SUBTASK",
-		"duration": 15,
-		"startTime": "16-02-2023/14:30",
-		"endTime": "16-02-2023/14:45"
-		}
- ]
-}
+        Epic epic2 = new Epic("Эпик для теста добавления и обновления эпика", "Описание эпика для теста",
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(41));
 
- */
+        Subtask subtask21 = new Subtask("Написать тест", "Тест для проверки добавления и изменения задач",
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(15));
+        Subtask subtask22 = (new Subtask("Проверить работу тестов",
+                "Проверить работу добавления и изменения эпика",
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 30), Duration.ofMinutes(15)));
 
+        ArrayList<Subtask> subtasks = new ArrayList<>(List.of(subtask21, subtask22));
+
+        JsonObject epicWithSubtaskJsonObject = new JsonObject();
+        JsonObject epicJsonObject = gson.toJsonTree(epic2).getAsJsonObject();
+        epicWithSubtaskJsonObject.add("epic", epicJsonObject);
+        JsonArray jsonArray = gson.toJsonTree(subtasks).getAsJsonArray();
+        epicWithSubtaskJsonObject.add("subtasks", jsonArray);
+        String epicWithSubtask = gson.toJson(epicWithSubtaskJsonObject);
+
+        HttpRequest requestPost = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(epicWithSubtask))
+                .uri(url)
+                .build();
+
+        Epic epicForUpdate = new Epic("Эпик для теста добавления и обновления эпика",
+                "Описание эпика для теста", Status.NEW, 6,
+                new ArrayList<>(List.of(7, 8)),
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4),
+                Duration.ofMinutes(41), LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 45),
+                NameTask.EPIC);
+
+        Subtask subtask1ForUpdate = new Subtask("Написать тест",
+                "Тест для проверки добавления и изменения задач", Status.DONE, 7,
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(15),
+                6, LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 19),
+                NameTask.SUBTASK);
+
+        Subtask subtask2ForUpdate = new Subtask("Проверить работу тестов",
+                "Проверить работу добавления и изменения эпика", Status.IN_PROGRESS, 8,
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 30), Duration.ofMinutes(15),
+                6, LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 45),
+                NameTask.SUBTASK);
+
+        ArrayList<Subtask> subtasksForUpdate = new ArrayList<>(List.of(subtask1ForUpdate, subtask2ForUpdate));
+
+        JsonObject epicWithSubtaskForUpdateJsonObject = new JsonObject();
+        JsonObject epicForUpdateJsonObject = gson.toJsonTree(epicForUpdate).getAsJsonObject();
+        epicWithSubtaskForUpdateJsonObject.add("epic", epicForUpdateJsonObject);
+        JsonArray jsonArrayForUpdate = gson.toJsonTree(subtasksForUpdate).getAsJsonArray();
+        epicWithSubtaskForUpdateJsonObject.add("subtasks", jsonArrayForUpdate);
+        String epicWithSubtaskForUpdate = gson.toJson(epicWithSubtaskForUpdateJsonObject);
+
+        HttpRequest requestPostForUpdate = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(epicWithSubtaskForUpdate))
+                .uri(url)
+                .build();
+
+        URI urlGet = URI.create("http://localhost:8080/tasks/epic/?id=6");
+        HttpRequest requestGet = HttpRequest.newBuilder()
+                .GET()
+                .uri(urlGet)
+                .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        Epic epicAfterUpdate = new Epic("Эпик для теста добавления и обновления эпика",
+                "Описание эпика для теста", Status.IN_PROGRESS, 6, new ArrayList<>(List.of(7, 8)),
+                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4),
+                Duration.ofMinutes(41), LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 45),
+                NameTask.EPIC);
+
+        String taskForGetJsonTest = gson.toJson(epicAfterUpdate);
+
+        try {
+            HttpResponse<String> responsePost = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
+            assertEquals(201, responsePost.statusCode());
+
+            HttpResponse<String> responsePostForUpdate = client.send(requestPostForUpdate, HttpResponse.BodyHandlers.ofString());
+            assertEquals(201, responsePostForUpdate.statusCode());
+
+            HttpResponse<String> responseGet = client.send(requestGet, HttpResponse.BodyHandlers.ofString());
+            assertEquals(taskForGetJsonTest, responseGet.body());
+        } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
+            System.out.println("Во время выполнения запроса ресурса по url-адресу: '" + url + "', возникла ошибка.\n" +
+                    "Проверьте, пожалуйста, адрес и повторите попытку.");
+        }
     }
 
     @Test

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.project.manager.Managers.getDefault;
 
-abstract class TaskManagerTest<T extends TaskManager> { //тест на пересечение задач по времени на строках 184 и 204
+abstract class TaskManagerTest<T extends TaskManager> {
 
     protected Task task_StatusNewTest;
     protected Task task_StatusInProgressTest;

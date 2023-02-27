@@ -18,13 +18,17 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private final String API_TOKEN;
     private final KVTaskClient kvTaskClient;
     private Gson gson;
-    private final String urlServes = "http://localhost:8078/register";
+    private static final String LOCAL_HOST = "http://localhost:";
+    private static final String PORT_8080 = "8080";
+    private static final String PORT_8078 = "8078";
+    private static final String REGISTER = "/register";
+    private final String urlServes = LOCAL_HOST + PORT_8080 + REGISTER;
 
     public HttpTaskManager(String url) throws IOException, InterruptedException {
         loadFromServer();
         kvTaskClient = new KVTaskClient(url);
         this.API_TOKEN = kvTaskClient.getAPI_TOKEN();
-        load("http://localhost:8078/");
+        load(LOCAL_HOST + PORT_8078);
     }
 
     @Override

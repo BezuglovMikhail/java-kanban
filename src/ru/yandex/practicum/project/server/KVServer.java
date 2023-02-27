@@ -2,7 +2,6 @@ package ru.yandex.practicum.project.server;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Calendar.FEBRUARY;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -31,6 +30,9 @@ import ru.yandex.practicum.project.task.Task;
 
 public class KVServer {
     public static final int PORT = 8078;
+    private static final String SAVE = "/save/";
+    private static final String LOAD = "/load/";
+    private static final String REGISTER = "/register";
     protected final String apiToken;
     protected final HttpServer server;
     public Map<String, String> data = new HashMap<>();
@@ -38,9 +40,9 @@ public class KVServer {
     public KVServer() throws IOException {
         apiToken = generateApiToken();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
-        server.createContext("/register", this::register);
-        server.createContext("/save", this::save);
-        server.createContext("/load", this::load);
+        server.createContext(REGISTER, this::register);
+        server.createContext(SAVE, this::save);
+        server.createContext(LOAD, this::load);
 
         /*Task task1 = new Task("Прогулка", "Одеться и пойти гулять",
                 LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
@@ -96,14 +98,14 @@ public class KVServer {
 
     private void load(HttpExchange h) throws IOException {
         try {
-            System.out.println("\n/load");
+            System.out.println("\n" + LOAD);
             if (!hasAuth(h)) {
                 System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
                 h.sendResponseHeaders(403, 0);
                 return;
             }
             if ("GET".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/load/".length());
+                String key = h.getRequestURI().getPath().substring(LOAD.length());
                 if (key.isEmpty()) {
                     System.out.println("Key для сохранения пустой. key указывается в пути: /load/{key}");
                     h.sendResponseHeaders(400, 0);
@@ -125,14 +127,14 @@ public class KVServer {
 
     private void save(HttpExchange h) throws IOException {
         try {
-            System.out.println("\n/save");
+            System.out.println("\n" + SAVE);
             if (!hasAuth(h)) {
                 System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
                 h.sendResponseHeaders(403, 0);
                 return;
             }
             if ("POST".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/save/".length());
+                String key = h.getRequestURI().getPath().substring(SAVE.length());
                 if (key.isEmpty()) {
                     System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
                     h.sendResponseHeaders(400, 0);
@@ -158,7 +160,7 @@ public class KVServer {
 
     private void register(HttpExchange h) throws IOException {
         try {
-            System.out.println("\n/register");
+            System.out.println("\n" + REGISTER);
             if ("GET".equals(h.getRequestMethod())) {
                 sendText(h, apiToken);
             } else {

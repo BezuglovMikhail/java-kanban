@@ -1,39 +1,20 @@
 package ru.yandex.practicum.project.handle;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import ru.yandex.practicum.project.adapters.DurationAdapter;
-import ru.yandex.practicum.project.adapters.LocalDateTimeTypeAdapter;
 import ru.yandex.practicum.project.manager.HttpTaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
-public class HistoryHandler implements HttpHandler {
-    private final HttpTaskManager httpTaskManager;
-    private final Gson gson;
-
+public class HistoryHandler extends TaskHandler {
     public HistoryHandler(HttpTaskManager httpTaskManager) throws IOException {
-
-        this.httpTaskManager = httpTaskManager;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter());
-        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
-        gsonBuilder.serializeNulls();
-        gsonBuilder.setPrettyPrinting();
-        gson = gsonBuilder.create();
+        super(httpTaskManager);
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String requestMethod = exchange.getRequestMethod();
-        OutputStream outputStream = exchange.getResponseBody();
-
+    public void switchHandler(String requestMethod, OutputStream outputStream,
+                              HttpExchange exchange) throws IOException {
         if ("GET".equals(requestMethod)) {
             if (httpTaskManager.historyManager.getHistory().isEmpty()) {
                 exchange.sendResponseHeaders(405, 0);

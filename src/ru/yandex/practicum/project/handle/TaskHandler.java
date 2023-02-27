@@ -17,11 +17,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class TaskHandler implements HttpHandler {
-    private final HttpTaskManager httpTaskManager;
-    private final Gson gson;
+    protected final HttpTaskManager httpTaskManager;
+    protected final Gson gson;
 
     public TaskHandler(HttpTaskManager httpTaskManager) throws IOException {
-
         this.httpTaskManager = httpTaskManager;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter());
@@ -35,16 +34,20 @@ public class TaskHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String requestMethod = exchange.getRequestMethod();
         OutputStream outputStream = exchange.getResponseBody();
+        switchHandler(requestMethod, outputStream, exchange);
+    }
 
+    public void switchHandler(String requestMethod, OutputStream outputStream,
+                              HttpExchange exchange) throws IOException {
         switch (requestMethod) {
             case "POST": {
-                try {
-                    InputStream inputStream = exchange.getRequestBody();
+                try (InputStream inputStream = exchange.getRequestBody()) {
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                     Task task = gson.fromJson(body, Task.class);
                     if (task.getNameTask().isEmpty() || task.getDescription().isEmpty()) {
                         exchange.sendResponseHeaders(400, 0);
-                        outputStream.write(("Нельзя добавить задачу без имени и описания.").getBytes(StandardCharsets.UTF_8));
+                        outputStream.write(("Нельзя добавить задачу без имени и описания.")
+                                .getBytes(StandardCharsets.UTF_8));
                         exchange.close();
                     } else {
                         if (httpTaskManager.getTaskList().containsKey(task.getId())) {
@@ -74,16 +77,16 @@ public class TaskHandler implements HttpHandler {
                         taskId = Optional.empty();
                     }
                     if (taskId.isPresent()) {
-                       int id = taskId.get();
+                        int id = taskId.get();
                         if (httpTaskManager.getTaskList().containsKey(id)) {
                             httpTaskManager.findTaskIdAndRemove(id);
                             exchange.sendResponseHeaders(200, 0);
                             outputStream.write(("Задача с id = " + id + " удалена").getBytes(StandardCharsets.UTF_8));
                             exchange.close();
-                        }
-                        else {
+                        } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Задачи с id = " + id + " несуществует.").getBytes(StandardCharsets.UTF_8));
+                            outputStream.write(("Задачи с id = " + id + " несуществует.")
+                                    .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
                     } else {
@@ -118,7 +121,8 @@ public class TaskHandler implements HttpHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Задачи с id = " + id + " несуществует.").getBytes(StandardCharsets.UTF_8));
+                            outputStream.write(("Задачи с id = " + id + " несуществует.")
+                                    .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
 

@@ -1,39 +1,21 @@
 package ru.yandex.practicum.project.handle;
 
-import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import ru.yandex.practicum.project.adapters.DurationAdapter;
 import ru.yandex.practicum.project.manager.HttpTaskManager;
-import ru.yandex.practicum.project.adapters.LocalDateTimeTypeAdapter;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class EpicSubtasksHandler implements HttpHandler {
-    private final HttpTaskManager httpTaskManager;
-    private final Gson gson;
-
+public class EpicSubtasksHandler extends TaskHandler {
     public EpicSubtasksHandler(HttpTaskManager httpTaskManager) throws IOException {
-
-        this.httpTaskManager = httpTaskManager;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter());
-        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
-        gsonBuilder.serializeNulls();
-        gsonBuilder.setPrettyPrinting();
-        gson = gsonBuilder.create();
+        super(httpTaskManager);
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String requestMethod = exchange.getRequestMethod();
-        OutputStream outputStream = exchange.getResponseBody();
-
+    public void switchHandler(String requestMethod, OutputStream outputStream,
+                              HttpExchange exchange) throws IOException {
         if ("GET".equals(requestMethod)) {
             String[] pathParts = exchange.getRequestURI().getQuery().split("=");
             Optional<Integer> epicId;
@@ -64,5 +46,4 @@ public class EpicSubtasksHandler implements HttpHandler {
             throw new RuntimeException();
         }
     }
-
 }

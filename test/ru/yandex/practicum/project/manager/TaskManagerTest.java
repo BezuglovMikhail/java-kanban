@@ -16,31 +16,24 @@ import org.junit.jupiter.api.function.Executable;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.yandex.practicum.project.manager.Managers.getDefault;
 
 abstract class TaskManagerTest<T extends TaskManager> {
 
     protected Task task_StatusNewTest;
     protected Task task_StatusInProgressTest;
-
     protected Epic epic1_StatusNewTest;
     protected Epic epic1_StatusInProgressTest;
-
     protected Epic epic2_StatusNewTest;
     protected Epic epic2_StatusInProgressTest;
     protected Epic epic2_StatusDoneTest;
-
     protected Subtask subtaskEpic1_StatusNewTest;
     protected Subtask subtaskEpic1_StatusInProgressTest;
-
     protected Subtask subtaskEpic2_1_StatusNewTest;
     protected Subtask subtaskEpic2_1_StatusInProgressTest;
     protected Subtask subtaskEpic2_1_StatusDoneTest;
     protected Subtask subtaskEpic2_2_StatusNewTest;
     protected Subtask subtaskEpic2_2_StatusDoneTest;
     protected Subtask subtaskEpic2_3_StatusNewTest;
-
-    //InMemoryTaskManager manager = (InMemoryTaskManager) getDefault();
     InMemoryTaskManager manager = new InMemoryTaskManager();
 
     @BeforeEach
@@ -202,7 +195,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void checkCrossTaskForAddTest() { //тест на пересечение задач по времени
+    void checkCrossTaskForAddTest() {
         Task task = new Task("NameTask", "description",
                 LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15));
 

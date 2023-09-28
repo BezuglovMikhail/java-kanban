@@ -40,7 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
                 && task.getDescription() != null
                 && !task.getDescription().equals("")
                 && !task.getNameTask().equals("")
-                && checkCrossTask(task, getPrioritizedTasks())) { // проверка на пересечение задач при добавлении
+                && checkCrossTask(task, getPrioritizedTasks())) {
             id++;
             task.setStatus(NEW);
             task.setId(id);
@@ -73,7 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<Integer> idSubtaskEpic = new ArrayList<>();
 
             for (Subtask subtask : subtasks) {
-                if (checkCrossTask(subtask, getPrioritizedTasks())) { // проверка на пересечение задач при добавлении
+                if (checkCrossTask(subtask, getPrioritizedTasks())) {
                     id++;
                     subtask.setId(id);
                     subtask.setStatus((NEW));
@@ -138,7 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task updateTask(Task task) throws IOException {
         prioritizedTasks.remove(taskList.get(task.getId()));
-        if (checkCrossTask(task, getPrioritizedTasks())) {  // проверка на пересечение задач при обновлении
+        if (checkCrossTask(task, getPrioritizedTasks())) {
             if (Objects.equals(task.getStatus(), IN_PROGRESS) || Objects.equals(task.getStatus(), DONE)) {
                 task.setStatus(task.getStatus());
                 prioritizedTasks.add(task);
@@ -165,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Subtask subtask : subtasks) {
             prioritizedTasks.remove(subtaskList.get(subtask.getId()));
-            if (checkCrossTask(subtask, getPrioritizedTasks())) {  // проверка на пересечение задач при обновлении
+            if (checkCrossTask(subtask, getPrioritizedTasks())) {
                 if (subtask.getStatus().equals(DONE)) {
                     numberDoneSubtask += 1;
                     prioritizedTasks.add(subtask);

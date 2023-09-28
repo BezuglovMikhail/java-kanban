@@ -40,4 +40,3 @@ public class Node<Task> {
         this.prev = prev;
     }
 }
-

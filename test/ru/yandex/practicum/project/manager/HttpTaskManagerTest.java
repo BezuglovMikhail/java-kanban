@@ -3,12 +3,10 @@ package ru.yandex.practicum.project.manager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.*;
-import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.*;
 import ru.yandex.practicum.project.adapters.DurationAdapter;
 import ru.yandex.practicum.project.adapters.LocalDateTimeTypeAdapter;
-import ru.yandex.practicum.project.handle.TaskHandler;
 import ru.yandex.practicum.project.server.HttpTaskServer;
 import ru.yandex.practicum.project.server.KVServer;
 import ru.yandex.practicum.project.status.Status;
@@ -17,12 +15,10 @@ import ru.yandex.practicum.project.task.Subtask;
 import ru.yandex.practicum.project.task.Task;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -64,7 +60,7 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
                 "Компактно упаковать вещи в коробки и промаркировать",
                 LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15)));
 
-        Task task2 = new Task("Написание тестов", "Неотвлекаться и писать тесты",
+        Task task2 = new Task("Написание тестов", "Не отвлекаться и писать тесты",
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15));
 
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -82,8 +78,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
         kvServer.data.put("epic", epic + "//");
         kvServer.data.put("subtask", subtaskS1 + "//" + subtaskS2 + "//");
 
-        Task taskForHistory = new Task("Написание тестов", "Неотвлекаться и писать тесты", Status.NEW, 2,
-                LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
+        Task taskForHistory = new Task("Написание тестов", "Не отвлекаться и писать тесты", Status.NEW,
+                2, LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 45), NameTask.TASK);
 
         String history1 = gson.toJson(taskForHistory);
@@ -91,14 +87,16 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
         Epic epicHistory = new Epic("Переезд", "Переезд в другой город", Status.NEW, 3,
                 new ArrayList<>(List.of(4, 5)),
                 LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30),
-                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 22, 05), NameTask.EPIC);
+                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 22, 05),
+                NameTask.EPIC);
 
         String history2 = gson.toJson(epicHistory);
 
         Subtask subtaskHistoryTest = new Subtask("Упаковать вещи",
                 "Компактно упаковать вещи в коробки и промаркировать", Status.NEW, 5,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45),
+                NameTask.SUBTASK);
 
         String history3 = gson.toJson(subtaskHistoryTest);
         kvServer.data.put("history", history1 + "//" + history2 + "//" + history3 + "//");
@@ -126,7 +124,7 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
                 LocalDateTime.of(2023, FEBRUARY, 13, 19, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 19, 45), NameTask.TASK);
 
-        Task taskForTest2 = new Task("Написание тестов", "Неотвлекаться и писать тесты", Status.NEW, 2,
+        Task taskForTest2 = new Task("Написание тестов", "Не отвлекаться и писать тесты", Status.NEW, 2,
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 45), NameTask.TASK);
 
@@ -156,8 +154,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         HttpClient client = HttpClient.newHttpClient();
 
-        Task taskForTest2 = new Task("Написание тестов", "Неотвлекаться и писать тесты", Status.NEW, 2,
-                LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
+        Task taskForTest2 = new Task("Написание тестов", "Не отвлекаться и писать тесты", Status.NEW,
+                2, LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 45), NameTask.TASK);
 
         String forTest = gson.toJson(taskForTest2);
@@ -218,8 +216,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     void postTasksTaskUpdateTaskTest() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/");
 
-        Task taskForUpdateTaskNew = new Task("Проверка тестов", "Проверить, что тесты тестируют функционал",
-                Status.NEW, 6,
+        Task taskForUpdateTaskNew = new Task("Проверка тестов",
+                "Проверить, что тесты тестируют функционал", Status.NEW, 6,
                 LocalDateTime.of(2023, FEBRUARY, 13, 5, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 5, 45), NameTask.TASK);
 
@@ -236,14 +234,15 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
                 .uri(urlGetTaskId6New)
                 .build();
 
-        Task taskForUpdateTaskInProgress = new Task("Проверка тестов", "Проверить, что тесты тестируют функционал",
-                Status.IN_PROGRESS, 6,
+        Task taskForUpdateTaskInProgress = new Task("Проверка тестов",
+                "Проверить, что тесты тестируют функционал", Status.IN_PROGRESS, 6,
                 LocalDateTime.of(2023, FEBRUARY, 13, 5, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 5, 45), NameTask.TASK);
 
-        Task taskForUpdateTaskDone = new Task("Написание тестов", "Неотвлекаться и писать тесты", Status.DONE, 2,
-                LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
-                LocalDateTime.of(2023, FEBRUARY, 13, 9, 45), NameTask.TASK);
+        Task taskForUpdateTaskDone = new Task("Написание тестов", "Не отвлекаться и писать тесты",
+                Status.DONE, 2, LocalDateTime.of(2023, FEBRUARY, 13, 9, 30),
+                Duration.ofMinutes(15), LocalDateTime.of(2023, FEBRUARY, 13, 9, 45),
+                NameTask.TASK);
 
         String postTaskForUpdateTaskInProgress = gson.toJson(taskForUpdateTaskInProgress);
 
@@ -274,22 +273,28 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
                 .build();
 
         try {
-            HttpResponse<String> responsePostNew = client.send(requestPostNew, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responsePostNew = client.send(requestPostNew,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(201, responsePostNew.statusCode());
 
-            HttpResponse<String> responseGetTaskId6New = client.send(requestGetTaskId6New, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responseGetTaskId6New = client.send(requestGetTaskId6New,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(postTaskForUpdateTaskNew, responseGetTaskId6New.body());
 
-            HttpResponse<String> responsePostInProgress = client.send(requestPostInProgress, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responsePostInProgress = client.send(requestPostInProgress,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(201, responsePostInProgress.statusCode());
 
-            HttpResponse<String> responseGetTaskId6 = client.send(requestGetTaskId6, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responseGetTaskId6 = client.send(requestGetTaskId6,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(postTaskForUpdateTaskInProgress, responseGetTaskId6.body());
 
-            HttpResponse<String> responsePostDone = client.send(requestPostDone, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responsePostDone = client.send(requestPostDone,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(201, responsePostDone.statusCode());
 
-            HttpResponse<String> responseGetTaskId2 = client.send(requestGetTaskId2, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responseGetTaskId2 = client.send(requestGetTaskId2,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(postTaskForUpdateTaskDone, responseGetTaskId2.body());
 
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
@@ -360,7 +365,7 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
             assertEquals("Задача с id = 2 удалена", responseDel2.body());
 
             HttpResponse<String> responseDel3 = client.send(requestDel3, HttpResponse.BodyHandlers.ofString());
-            assertEquals("Задачи с id = 3 несуществует.", responseDel3.body());
+            assertEquals("Задачи с id = 3 не существует.", responseDel3.body());
 
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
             System.out.println("Во время выполнения запроса ресурса по url-адресу: '" + url + "', возникла ошибка.\n" +
@@ -413,7 +418,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
             HttpResponse<String> responseDel = client.send(requestDel, HttpResponse.BodyHandlers.ofString());
             assertEquals("Задачи удалены", responseDel.body());
 
-            HttpResponse<String> responseGetAfterClean = client.send(requestGetAfterClean, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responseGetAfterClean = client.send(requestGetAfterClean,
+                    HttpResponse.BodyHandlers.ofString());
             assertTrue(true, String.valueOf(responseGet.body().isEmpty()));
 
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
@@ -434,13 +440,13 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         Subtask subtaskId4Test = new Subtask("Составить список",
                 "Список вещей для переезда", Status.NEW, 4,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
 
         Subtask subtaskId5Test = new Subtask("Упаковать вещи",
                 "Компактно упаковать вещи в коробки и промаркировать", Status.NEW, 5,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
 
         HashMap<Integer, Subtask> testTask = new HashMap<>();
         testTask.put(4, subtaskId4Test);
@@ -470,8 +476,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         Subtask subtaskId4Test = new Subtask("Составить список",
                 "Список вещей для переезда", Status.NEW, 4,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
 
         String forTest = gson.toJson(subtaskId4Test);
 
@@ -497,8 +503,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         Subtask subtaskId4Test = new Subtask("Составить список",
                 "Список вещей для переезда", Status.NEW, 4,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
 
         String forTest = gson.toJson(subtaskId4Test);
 
@@ -521,8 +527,9 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             assertEquals("Задача с id = 4 удалена", response.body());
 
-            HttpResponse<String> responseGetAfterDel = client.send(requestGetAfterDel, HttpResponse.BodyHandlers.ofString());
-            assertEquals("Подзадачи с id = 4 несуществует.", responseGetAfterDel.body());
+            HttpResponse<String> responseGetAfterDel = client.send(requestGetAfterDel,
+                    HttpResponse.BodyHandlers.ofString());
+            assertEquals("Подзадачи с id = 4 не существует.", responseGetAfterDel.body());
 
         } catch (IOException | InterruptedException e) {
             System.out.println("Во время выполнения запроса ресурса по url-адресу: '" + url + "', возникла ошибка.\n" +
@@ -544,7 +551,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
         Epic epicHistory = new Epic("Переезд", "Переезд в другой город", Status.NEW, 3,
                 new ArrayList<>(List.of(4, 5)),
                 LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30),
-                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.EPIC);
+                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45),
+                NameTask.EPIC);
 
         HashMap<Integer, Epic> testEpic = new HashMap<>();
         testEpic.put(3, epicHistory);
@@ -574,7 +582,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
         Epic epicHistory = new Epic("Переезд", "Переезд в другой город", Status.NEW, 3,
                 new ArrayList<>(List.of(4, 5)),
                 LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30),
-                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.EPIC);
+                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45),
+                NameTask.EPIC);
 
         String forTest = gson.toJson(epicHistory);
 
@@ -593,11 +602,12 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         URI url = URI.create("http://localhost:8080/tasks/epic/");
 
-        Epic epic2 = new Epic("Эпик для теста добавления и обновления эпика", "Описание эпика для теста",
-                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(41));
-
-        Subtask subtask21 = new Subtask("Написать тест", "Тест для проверки добавления и изменения задач",
-                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(15));
+        Epic epic2 = new Epic("Эпик для теста добавления и обновления эпика",
+                "Описание эпика для теста", LocalDateTime.of(2023, Month.FEBRUARY, 27,
+                12, 4), Duration.ofMinutes(41));
+        Subtask subtask21 = new Subtask("Написать тест",
+                "Тест для проверки добавления и изменения задач", LocalDateTime.of(2023, Month.FEBRUARY,
+                27, 12, 4), Duration.ofMinutes(15));
         Subtask subtask22 = (new Subtask("Проверить работу тестов",
                 "Проверить работу добавления и изменения эпика",
                 LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 30), Duration.ofMinutes(15)));
@@ -624,10 +634,12 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         HttpClient client = HttpClient.newHttpClient();
 
-        Epic epicAfterAdd = new Epic("Эпик для теста добавления и обновления эпика", "Описание эпика для теста", Status.NEW, 6,
+        Epic epicAfterAdd = new Epic("Эпик для теста добавления и обновления эпика",
+                "Описание эпика для теста", Status.NEW, 6,
                 new ArrayList<>(List.of(7, 8)),
                 LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4),
-                Duration.ofMinutes(41), LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 45), NameTask.EPIC);
+                Duration.ofMinutes(41), LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 45),
+                NameTask.EPIC);
 
         String taskForGetJsonTest = gson.toJson(epicAfterAdd);
 
@@ -647,11 +659,13 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     void postTasksEpicUpdateEpicInProgressTest() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/");
 
-        Epic epic2 = new Epic("Эпик для теста добавления и обновления эпика", "Описание эпика для теста",
-                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(41));
+        Epic epic2 = new Epic("Эпик для теста добавления и обновления эпика",
+                "Описание эпика для теста", LocalDateTime.of(2023, Month.FEBRUARY,
+                27, 12, 4), Duration.ofMinutes(41));
 
-        Subtask subtask21 = new Subtask("Написать тест", "Тест для проверки добавления и изменения задач",
-                LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 4), Duration.ofMinutes(15));
+        Subtask subtask21 = new Subtask("Написать тест",
+                "Тест для проверки добавления и изменения задач", LocalDateTime.of(2023, Month.FEBRUARY,
+                27, 12, 4), Duration.ofMinutes(15));
         Subtask subtask22 = (new Subtask("Проверить работу тестов",
                 "Проверить работу добавления и изменения эпика",
                 LocalDateTime.of(2023, Month.FEBRUARY, 27, 12, 30), Duration.ofMinutes(15)));
@@ -723,7 +737,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
             HttpResponse<String> responsePost = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
             assertEquals(201, responsePost.statusCode());
 
-            HttpResponse<String> responsePostForUpdate = client.send(requestPostForUpdate, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responsePostForUpdate = client.send(requestPostForUpdate,
+                    HttpResponse.BodyHandlers.ofString());
             assertEquals(201, responsePostForUpdate.statusCode());
 
             HttpResponse<String> responseGet = client.send(requestGet, HttpResponse.BodyHandlers.ofString());
@@ -750,7 +765,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
         Epic epic = new Epic("Переезд", "Переезд в другой город", Status.NEW, 3,
                 new ArrayList<>(List.of(4, 5)),
                 LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30),
-                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.EPIC);
+                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45),
+                NameTask.EPIC);
 
         String taskForGetJsonTest = gson.toJson(epic);
 
@@ -780,7 +796,7 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
             assertEquals("Задача с id = 3 удалена", responseDel.body());
 
             HttpResponse<String> responseDel3 = client.send(requestDel3, HttpResponse.BodyHandlers.ofString());
-            assertEquals("Задачи с id = 3 несуществует.", responseDel3.body());
+            assertEquals("Задачи с id = 3 не существует.", responseDel3.body());
 
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
             System.out.println("Во время выполнения запроса ресурса по url-адресу: '" + url + "', возникла ошибка.\n" +
@@ -800,13 +816,15 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         Subtask subtaskId4Test = new Subtask("Составить список",
                 "Список вещей для переезда", Status.NEW, 4,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45),
+                NameTask.SUBTASK);
 
         Subtask subtaskId5Test = new Subtask("Упаковать вещи",
                 "Компактно упаковать вещи в коробки и промаркировать", Status.NEW, 5,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45),
+                NameTask.SUBTASK);
 
         ArrayList<Subtask> testTask = new ArrayList<>();
         testTask.add(subtaskId4Test);
@@ -858,19 +876,20 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
                 .uri(url)
                 .build();
 
-        Task taskForHistory = new Task("Написание тестов", "Неотвлекаться и писать тесты", Status.NEW, 2,
-                LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
+        Task taskForHistory = new Task("Написание тестов", "Не отвлекаться и писать тесты", Status.NEW,
+                2, LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 45), NameTask.TASK);
 
         Epic epicHistory = new Epic("Переезд", "Переезд в другой город", Status.NEW, 3,
                 new ArrayList<>(List.of(4, 5)),
                 LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30),
-                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 22, 05), NameTask.EPIC);
+                Duration.ofMinutes(75), LocalDateTime.of(2023, Month.FEBRUARY, 13, 22, 05),
+                NameTask.EPIC);
 
         Subtask subtaskHistoryTest = new Subtask("Упаковать вещи",
                 "Компактно упаковать вещи в коробки и промаркировать", Status.NEW, 5,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
 
         ArrayList<Task> historyTask = new ArrayList<>();
         historyTask.add(taskForHistory);
@@ -930,8 +949,8 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
                 .uri(url)
                 .build();
 
-        Task taskForHistory = new Task("Написание тестов", "Неотвлекаться и писать тесты", Status.NEW, 2,
-                LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
+        Task taskForHistory = new Task("Написание тестов", "Не отвлекаться и писать тесты", Status.NEW,
+                2, LocalDateTime.of(2023, FEBRUARY, 13, 9, 30), Duration.ofMinutes(15),
                 LocalDateTime.of(2023, FEBRUARY, 13, 9, 45), NameTask.TASK);
 
         Task taskForTest = new Task("Прогулка", "Одеться и пойти гулять", Status.NEW, 1,
@@ -940,13 +959,13 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
         Subtask subtaskId4Test = new Subtask("Составить список",
                 "Список вещей для переезда", Status.NEW, 4,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 20, 45), NameTask.SUBTASK);
 
         Subtask subtaskHistoryTest = new Subtask("Упаковать вещи",
                 "Компактно упаковать вещи в коробки и промаркировать", Status.NEW, 5,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15), 3,
-                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
+                LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 30), Duration.ofMinutes(15),
+                3, LocalDateTime.of(2023, Month.FEBRUARY, 13, 21, 45), NameTask.SUBTASK);
 
         ArrayList<Task> historyTask = new ArrayList<>();
         historyTask.add(taskForGetTest);
@@ -970,22 +989,5 @@ class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
             System.out.println("Во время выполнения запроса ресурса по url-адресу: '" + url + "', возникла ошибка.\n" +
                     "Проверьте, пожалуйста, адрес и повторите попытку.");
         }
-    }
-
-
-
-
-
-
-
-
-
-
-    @Test
-    void save() {
-    }
-
-    @Test
-    void load() {
     }
 }

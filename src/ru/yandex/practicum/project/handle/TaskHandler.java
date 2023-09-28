@@ -85,7 +85,7 @@ public class TaskHandler implements HttpHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Задачи с id = " + id + " несуществует.")
+                            outputStream.write(("Задачи с id = " + id + " не существует.")
                                     .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
@@ -121,7 +121,7 @@ public class TaskHandler implements HttpHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Задачи с id = " + id + " несуществует.")
+                            outputStream.write(("Задачи с id = " + id + " не существует.")
                                     .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
@@ -145,15 +145,3 @@ public class TaskHandler implements HttpHandler {
         }
     }
 }
-/*
-{
-	"nameTask": "Прогулка",
-	"description": "Одеться и пойти гулять",
-	"status": "NEW",
-	"id": 1,
-	"type": "TASK",
-	"duration": 15,
-	"startTime": "13--02--2023",
-	"endTime": "13--02--2023"
-}
- */

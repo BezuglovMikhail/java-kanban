@@ -33,7 +33,7 @@ public class EpicSubtasksHandler extends TaskHandler {
                     exchange.close();
                 } else {
                     exchange.sendResponseHeaders(405, 0);
-                    outputStream.write(("Эпика с id = " + id + " несуществует.").getBytes(StandardCharsets.UTF_8));
+                    outputStream.write(("Эпика с id = " + id + " не существует.").getBytes(StandardCharsets.UTF_8));
                     exchange.close();
                 }
             } else {

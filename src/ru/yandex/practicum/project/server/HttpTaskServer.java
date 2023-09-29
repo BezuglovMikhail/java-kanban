@@ -8,7 +8,6 @@ import ru.yandex.practicum.project.manager.Managers;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-
 public class HttpTaskServer {
     private HttpTaskManager httpTaskManager;
     private HttpServer httpServer;

@@ -51,7 +51,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     }
 
     @Test
-    void saveAndLoadOneTaskTwoEpicWithHistoryManagerTest() throws IOException, IllegalAccessException, InterruptedException {
+    void saveAndLoadOneTaskTwoEpicWithHistoryManagerTest() throws IOException, IllegalAccessException,
+            InterruptedException {
         manager.addTask(task_StatusNewTest);
         manager.addEpic(epic1_StatusNewTest, new ArrayList<Subtask>(List.of(subtaskEpic1_StatusInProgressTest)));
         manager.addEpic(epic2_StatusNewTest, new ArrayList<Subtask>(List.of(subtaskEpic2_1_StatusNewTest,

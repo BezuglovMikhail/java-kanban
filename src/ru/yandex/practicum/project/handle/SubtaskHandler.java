@@ -37,7 +37,7 @@ public class SubtaskHandler extends TaskHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Подзадачи с id= " + id + " несуществует")
+                            outputStream.write(("Подзадачи с id= " + id + " не существует")
                                     .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
@@ -64,7 +64,7 @@ public class SubtaskHandler extends TaskHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Подзадачи с id = " + id + " несуществует.")
+                            outputStream.write(("Подзадачи с id = " + id + " не существует.")
                                     .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }

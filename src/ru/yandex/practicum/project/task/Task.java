@@ -1,13 +1,10 @@
 package ru.yandex.practicum.project.task;
 
-import jdk.jshell.Snippet;
 import ru.yandex.practicum.project.status.Status;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-import static ru.yandex.practicum.project.task.NameTask.TASK;
 
 public class Task {
     private final String nameTask;
@@ -66,7 +63,8 @@ public class Task {
         this.endTime = startTime.plus(duration);
     }
 
-    public Task(String nameTask, String description, Status status, int id, LocalDateTime startTime, Duration duration, LocalDateTime endTime, NameTask type) {
+    public Task(String nameTask, String description, Status status, int id, LocalDateTime startTime, Duration duration,
+                LocalDateTime endTime, NameTask type) {
         this.nameTask = nameTask;
         this.description = description;
         this.status = status;

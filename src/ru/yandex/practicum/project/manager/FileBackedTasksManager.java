@@ -53,7 +53,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ManagerSaveException("Ошибка ввода выода", e);
+            throw new ManagerSaveException("Ошибка ввода вывода", e);
         }
     }
 
@@ -310,5 +310,3 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                                 fileBackedTasksManager.getSubtaskList().get(6).getIdEpic()))));
     }
 }
-
-

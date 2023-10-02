@@ -78,7 +78,7 @@ public class EpicHandler extends TaskHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Эпикка с id= " + id + " несуществует")
+                            outputStream.write(("Эпика с id= " + id + " не существует")
                                     .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
@@ -105,7 +105,7 @@ public class EpicHandler extends TaskHandler {
                             exchange.close();
                         } else {
                             exchange.sendResponseHeaders(405, 0);
-                            outputStream.write(("Задачи с id = " + id + " несуществует.")
+                            outputStream.write(("Задачи с id = " + id + " не существует.")
                                     .getBytes(StandardCharsets.UTF_8));
                             exchange.close();
                         }
@@ -128,29 +128,3 @@ public class EpicHandler extends TaskHandler {
         }
     }
 }
-
-/*
-	{
-	"epic": {
-	"nameTask": "Прогулка24",
-	"description": "Одеться и пойти гулять24"
-	},
-
-"subtasks": [
-	{
-	"nameTask": "Прогулка2",
-	"description": "Одеться и пойти гулять2",
-	"duration": 15,
-	"startTime": "16-02-2023/13:30"
-	},
-	{
-	"nameTask": "Прогулка2",
-	"description": "Одеться и пойти гулять2",
-	"duration": 15,
-	"startTime": "16-02-2023/14:30"
-		}
- ]
-}
-
-
- */
